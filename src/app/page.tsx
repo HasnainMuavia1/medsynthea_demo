@@ -15,7 +15,7 @@ const Home = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
-      <Loader variant="centered" size="md" label="Loading MedSynthea demo" />
+      <Loader variant="centered" size="md" label="Loading MedSynthea" />
     </div>
   )
 }

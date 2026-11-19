@@ -512,10 +512,10 @@ export const answerQuestion = (question: string, state: AssistantState, lastPati
     return {
       intent: concepts.has('help') ? 'help' : 'fallback',
       text: concepts.has('help')
-        ? 'I can answer questions about the demo data — appointments, eligibility, prior auth, coding, estimates, claims, denials, AR calls, ERAs, EOBs and reconciliation, overall or for one patient. Try one of these:'
+        ? 'I can answer questions about your workspace — appointments, eligibility, prior auth, coding, estimates, claims, denials, AR calls, ERAs, EOBs and reconciliation, overall or for one patient. Try one of these:'
         : "I didn't catch that. Ask about a patient by name, or about appointments, eligibility, coding, estimates, claims, denials, ERAs, EOBs or reconciliation. For example:",
       suggestions: SUGGESTIONS,
     }
   }
-  return { intent: 'fallback', text: "I couldn't match that to the demo data. Try one of these:", suggestions: SUGGESTIONS }
+  return { intent: 'fallback', text: "I couldn't match that to your workspace. Try one of these:", suggestions: SUGGESTIONS }
 }

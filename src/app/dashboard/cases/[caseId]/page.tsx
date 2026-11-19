@@ -67,7 +67,7 @@ const CaseWorkspace = () => {
   if (!c || !patient) {
     return (
       <RcmPage>
-        <EmptyHint icon={FileX} title="Encounter not found" hint="It may have been removed by a demo reset." action={<Button href="/dashboard/appointments" variant="outline" size="sm">Back to appointments</Button>} />
+        <EmptyHint icon={FileX} title="Encounter not found" hint="It may have been removed." action={<Button href="/dashboard/appointments" variant="outline" size="sm">Back to appointments</Button>} />
       </RcmPage>
     )
   }

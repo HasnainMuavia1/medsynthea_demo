@@ -218,7 +218,7 @@ export const AudioStep = ({ c, goTo }: StepPanelProps) => {
           </div>
           <div className="text-sm font-semibold text-foreground">Upload the encounter recording</div>
           <div className="max-w-md text-xs text-muted-foreground">
-            MP3, M4A, WAV or WEBM — or use the sample ambient recording for this {visit.short} encounter.
+            MP3, M4A, WAV or WEBM — or use the exam room recording for this {visit.short} encounter.
           </div>
           <input ref={inputRef} type="file" accept="audio/*" className="sr-only" onChange={(e) => handleFile(e.target.files?.[0] ?? null)} />
           <div className="flex gap-2">
@@ -228,7 +228,7 @@ export const AudioStep = ({ c, goTo }: StepPanelProps) => {
             </Button>
             <Button type="button" variant="outline" size="sm" onClick={() => run.start(() => uploadAudio(c.id, null, null))}>
               <Mic className="size-3.5" aria-hidden />
-              Use sample recording
+              Use exam room recording
             </Button>
           </div>
         </div>

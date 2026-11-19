@@ -62,7 +62,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           : 'lg:grid-cols-[var(--spacing-app-sidebar)_minmax(0,1fr)]'
       )}
     >
-      <title>{`${pageLabel} | MedSynthea Demo`}</title>
+      <title>{`${pageLabel} | MedSynthea`}</title>
       {mobileNavOpen ? (
         <div className="fixed inset-0 z-40 bg-foreground/40 lg:hidden" aria-hidden onClick={() => setMobileNavOpen(false)} />
       ) : null}

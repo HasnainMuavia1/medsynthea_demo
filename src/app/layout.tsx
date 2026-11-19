@@ -13,7 +13,7 @@ const plusJakartaSans = localFont({
 })
 
 export const metadata: Metadata = {
-  description: 'Interactive end-to-end revenue cycle prototype with sample data.',
+  description: 'End-to-end AI revenue cycle workspace.',
   robots: { index: false, follow: false },
 }
 

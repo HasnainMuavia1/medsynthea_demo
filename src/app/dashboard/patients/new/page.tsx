@@ -162,7 +162,7 @@ const RegisterPatientPage = () => {
         action={
           <Button type="button" variant="outline" size="sm" onClick={() => { setDraft(sampleDraft()); setErrors({}) }}>
             <Sparkles className="size-3.5" aria-hidden />
-            Auto-fill sample patient
+            Auto-fill patient details
           </Button>
         }
       />

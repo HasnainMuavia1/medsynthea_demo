@@ -172,7 +172,6 @@ export const SubmissionStep = ({ c, patient, goTo }: StepPanelProps) => {
               onChange={(e) => setUsage(e.target.value)}
             />
           </FormField>
-          <p className={ui.typography.cardSubtitle}>Demo workspace — nothing is sent to a real clearinghouse.</p>
         </div>
       </AppDialog>
     </PanelShell>

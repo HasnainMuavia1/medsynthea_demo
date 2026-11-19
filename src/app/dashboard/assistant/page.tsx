@@ -340,7 +340,7 @@ const AiAssistantPage = () => {
                   />
                   <div className="mt-2 flex items-center justify-between gap-2">
                     <span className="min-w-0 truncate text-2xs text-muted-foreground">
-                      {ctxPatient ? `Talking about ${fullName(ctxPatient)} — “this patient” refers to them` : 'Answers use live demo data'}
+                      {ctxPatient ? `Talking about ${fullName(ctxPatient)} — “this patient” refers to them` : 'Answers use live workspace data'}
                     </span>
                     <div className="flex shrink-0 items-center gap-2">
                       <span className="text-2xs text-muted-foreground">
@@ -372,7 +372,7 @@ const AiAssistantPage = () => {
           <div className="flex items-center justify-between border-b border-border px-4 py-3.5">
             <div className="min-w-0">
               <div className="text-sm font-semibold">Extracted patient{ctxPatient ? ` · ${fullName(ctxPatient)}` : ''}</div>
-              <div className="text-xs text-muted-foreground">{ctxPatient ? 'Live from the demo workspace' : 'Review and confirm before saving'}</div>
+              <div className="text-xs text-muted-foreground">{ctxPatient ? 'Live from your workspace' : 'Review and confirm before saving'}</div>
             </div>
             {extracted && <RcmBadge tone="blue">98% confident</RcmBadge>}
           </div>

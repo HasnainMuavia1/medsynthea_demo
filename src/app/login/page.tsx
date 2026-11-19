@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { AuthLayout } from '@/views/auth/shared/AuthLayout'
 import { authUi } from '@/views/auth/shared/auth-ui'
@@ -37,21 +37,20 @@ const LoginPage = () => {
         router.replace('/dashboard')
       } else {
         setPending(false)
-        setError('Invalid email or password. Use the demo credentials shown below.')
+        setError('Invalid email or password.')
       }
     }, 700)
   }
 
   return (
     <AuthLayout
-      seo={{ title: 'Sign In', description: 'Sign in to the MedSynthea demo', path: '/login' }}
+      seo={{ title: 'Sign In', description: 'Sign in to MedSynthea', path: '/login' }}
       eyebrow="Welcome to MedSynthea"
       title="Sign in to your workspace"
       description="Access your personalized workspace and let our AI agents handle the revenue cycle."
-      pending={pending ? { label: 'Signing in…', description: 'Loading your demo workspace' } : null}
-      footer={<Fragment>Sample-data prototype — no real patient information.</Fragment>}
+      pending={pending ? { label: 'Signing in…', description: 'Loading your workspace' } : null}
     >
-      <title>Sign in | MedSynthea Demo</title>
+      <title>Sign in | MedSynthea</title>
       <form className={authUi.form} onSubmit={handleSubmit} noValidate>
         <div className={authUi.field}>
           <label htmlFor="email" className={authUi.label}>

@@ -79,7 +79,7 @@ const NewAppointmentForm = () => {
                 }}
               />
             </FormField>
-            <FormField id="visitType" label="Visit type" required className="sm:col-span-2" hint="Sets the place of service, copay and prior authorization. The transcript, note and codes come from the demo recording.">
+            <FormField id="visitType" label="Visit type" required className="sm:col-span-2" hint="Sets the place of service, copay and prior authorization.">
               <Select
                 id="visitType"
                 value={draft.visitType}
