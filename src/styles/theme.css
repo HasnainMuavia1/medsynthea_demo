@@ -1,0 +1,238 @@
+@theme {
+  --font-sans: var(--font-plus-jakarta), 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plus-jakarta), 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale: the only font sizes components may use. No per-token line-height —
+     line-height comes from `leading-*` or inheritance. */
+  --text-*: initial;
+  --text-6xs: 7px;
+  --text-5xs: 8px;
+  --text-4xs: 9px;
+  --text-3xs: 10px;
+  --text-2xs: 11px;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 15px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 20px;
+  --text-3xl: 24px;
+  --text-4xl: 28px;
+  --text-5xl: 30px;
+  --text-quote-mark: 220px;
+  /* Role tokens used by ui.typography — they point at the scale, never own a value. */
+  --text-hero: var(--text-xl);
+  --text-section: var(--text-sm);
+  --text-eyebrow: var(--text-2xs);
+
+  --font-hero: 600;
+  --tracking-hero: var(--tracking-tight);
+
+  --spacing-section: 0.875rem;
+  /* Logged-in app keeps one arrangement from 980px to 1920px (see AGENTS.md § Responsive). */
+  --spacing-app-sidebar: clamp(13rem, 17.2vw, 15.5rem);
+  --spacing-app-sidebar-collapsed: 3.75rem;
+  --spacing-page-pad: 1.25rem;
+  --spacing-chat-history: 14.75rem;
+
+  --breakpoint-desktop: 61.25rem;
+
+  /* Fluid tokens: each resolves to its designed value at 1440px and scales across 980–1920px.
+     Use these instead of literal clamp() / px values in components. */
+  --text-marketing-display: clamp(32px, 8vw, 60px);
+  --text-marketing-section: clamp(28px, 3.6vw, 40px);
+  --text-marketing-section-md: clamp(28px, 3.4vw, 38px);
+  --text-marketing-section-sm: clamp(26px, 3.2vw, 36px);
+  --text-marketing-cta: clamp(24px, 6vw, 40px);
+  --text-marketing-card-lg: clamp(22px, 2.2vw, 28px);
+  --text-marketing-card-md: clamp(18px, 1.6vw, 22px);
+  --text-marketing-metric: clamp(1.75rem, 3vw, 2.35rem);
+  --text-marketing-quote: clamp(1.125rem, 2.2vw, 1.375rem);
+  --text-marketing-banner: clamp(14px, 2.1vw, 26px);
+  --text-auth-title: clamp(19px, 5vw, 23px);
+  --text-auth-hero: clamp(28px, 2.36vw, 44px);
+  --text-auth-lead: clamp(14px, 1.04vw, 17px);
+  --text-auth-feature: clamp(13.5px, 1vw, 16px);
+  --text-auth-feature-body: clamp(12.5px, 0.9vw, 14.5px);
+  --text-auth-stat: clamp(16px, 1.18vw, 20px);
+  --text-fluid-caption: clamp(10px, 0.764vw, 11px);
+  --text-fluid-nav: clamp(12px, 0.903vw, 13px);
+
+  --spacing-app-min: var(--breakpoint-desktop);
+  --spacing-app-side-panel: clamp(280px, 26.4vw, 380px);
+  --spacing-auth-card: clamp(380px, 26.4vw, 460px);
+  --spacing-auth-hero: clamp(380px, 30.5vw, 580px);
+  --spacing-fluid-gap: clamp(16px, 2.2vw, 32px);
+  --spacing-fluid-cell: clamp(0.375rem, calc(1.304vw - 6.78px), 0.75rem);
+  --spacing-fluid-card: clamp(0.75rem, 1.111vw, 1rem);
+  --spacing-badge: 5rem;
+  --spacing-fluid-action: clamp(0.375rem, 0.694vw, 0.625rem);
+  --spacing-problems-media: clamp(220px, 24vw, 300px);
+  --spacing-problems-metric: clamp(96px, 9.2vw, 132px);
+  --spacing-problems-icon: clamp(36px, 3.1vw, 44px);
+  --spacing-logo-footer: clamp(160px, 34vw, 192px);
+  --spacing-logo-nav: clamp(120px, 28vw, 150px);
+  --spacing-logo-compact: clamp(100px, 26vw, 120px);
+  --spacing-hero-min: min(100svh, 920px);
+  --spacing-state-page: 50vh;
+  --spacing-state-page-tall: 60vh;
+  --spacing-state-panel: 40vh;
+  --spacing-drawer-wide: min(840px, 96vw);
+  --spacing-drawer-max: 96vw;
+  --spacing-ai-assistant-panel: calc(100vh - 120px);
+  --spacing-menu-offset-y: calc(100% + 6px);
+  --spacing-panel-scroll: min(28rem, 50vh);
+  --spacing-panel-scroll-lg: min(28rem, 55vh);
+  --spacing-doc-preview: min(560px, 65vh);
+  --spacing-doc-preview-note: min(560px, 60vh);
+  --spacing-authz-workspace: calc(100dvh - 11rem);
+  --spacing-authz-panel: min(42rem, calc(100dvh - 12rem));
+  --spacing-modal-panel-max: min(90vh, calc(100dvh - 2rem));
+  --spacing-video-modal: min(1024px, 80svh * 16 / 9);
+  --spacing-toast: calc(100% - 2rem);
+
+  --blur-loader-bloom: 40px;
+  --blur-loader-fullscreen: 100px;
+  --blur-hairline: 1px;
+  --blur-soft: 2px;
+  --blur-marketing-glow: 48px;
+
+  /* Content widths (max-w-*). */
+  --container-page: 75rem;
+  --container-page-wide: 77.5rem;
+  --container-diagram: 61.25rem;
+  --container-copy: 45rem;
+  --container-copy-sm: 26.25rem;
+  --container-table-compact: 56rem;
+  --text-welcome-hero: 2.375rem;
+  --text-welcome-section: 1.3125rem;
+
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+  --radius-sm: 0.25rem;
+  --radius-card: 10px;
+  --radius-panel: 20px;
+  --radius-5xl: 2.5rem;
+  --radius-6xl: 3rem;
+
+  --tracking-display: -0.03em;
+  --tracking-eyebrow: 0.14em;
+  --tracking-caps: 0.2em;
+  --tracking-caps-wide: 0.3em;
+
+  --leading-display: 1.1;
+
+  /* Only colors.css tokens exist — Tailwind's default palette is disabled. */
+  --color-*: initial;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-secondary: var(--secondary);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-warning: var(--warning);
+  --color-brand-panel: var(--brand-panel);
+  --color-brand-panel-foreground: var(--brand-panel-foreground);
+  --color-brand-panel-accent: var(--brand-panel-accent);
+  --color-pill-green-bg: var(--pill-green-bg);
+  --color-pill-green-border: var(--pill-green-border);
+  --color-pill-yellow-bg: var(--pill-yellow-bg);
+  --color-pill-yellow-border: var(--pill-yellow-border);
+  --color-pill-red-bg: var(--pill-red-bg);
+  --color-pill-red-border: var(--pill-red-border);
+  --color-pill-blue-bg: var(--pill-blue-bg);
+  --color-pill-blue-text: var(--pill-blue-text);
+  --color-pill-blue-border: var(--pill-blue-border);
+  --color-pill-purple-bg: var(--pill-purple-bg);
+  --color-pill-purple-text: var(--pill-purple-text);
+  --color-pill-purple-border: var(--pill-purple-border);
+  --color-pill-orange-bg: var(--pill-orange-bg);
+  --color-pill-orange-text: var(--pill-orange-text);
+  --color-pill-orange-border: var(--pill-orange-border);
+  --color-pill-gray-bg: var(--pill-gray-bg);
+  --color-pill-gray-text: var(--pill-gray-text);
+  --color-pill-gray-border: var(--pill-gray-border);
+  --color-archive-hover: var(--archive-hover);
+  --color-view: var(--view);
+  --color-chart-green: var(--chart-green);
+  --color-chart-amber: var(--chart-amber);
+  --color-chart-cyan: var(--chart-cyan);
+  --color-chart-pink: var(--chart-pink);
+  --color-overlay: var(--overlay);
+
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
+  --shadow-inner: none;
+  --shadow-card-sm: var(--shadow-card-sm);
+  --shadow-card-md: var(--shadow-card-md);
+  --shadow-cinematic: var(--shadow-cinematic);
+  --shadow-success: var(--shadow-success);
+  --shadow-destructive: var(--shadow-destructive);
+  --shadow-purple: var(--shadow-purple);
+
+  --animate-ehr-line-draw: ehr-line-draw 0.85s ease-out forwards;
+  --animate-ehr-node-in: ehr-node-in 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+  --animate-ehr-icon-in: ehr-icon-in 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+  --animate-ehr-hub-pulse: ehr-hub-pulse 2.6s ease-out infinite;
+  --animate-reveal-up: reveal-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes reveal-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ehr-line-draw {
+    from {
+      stroke-dashoffset: var(--ehr-line-len, 400);
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes ehr-node-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ehr-icon-in {
+    from {
+      transform: scale(1.1);
+    }
+    to {
+      transform: scale(0.9);
+    }
+  }
+
+  @keyframes ehr-hub-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.35);
+      opacity: 0;
+    }
+  }
+}

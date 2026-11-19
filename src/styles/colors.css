@@ -1,0 +1,122 @@
+@layer base {
+  :root {
+    color-scheme: light;
+
+    --background: #fafaf9;
+    --foreground: #18181b;
+    --card: #ffffff;
+    --secondary: #f4f4f2;
+    --muted: #f3f3f1;
+    --muted-foreground: #62626b;
+    --border: #e7e5e4;
+
+    --primary: #027a4c;
+    --primary-hover: #01633d;
+    --primary-foreground: #ffffff;
+    --destructive: #c81e1e;
+    --destructive-hover: #a51717;
+    --destructive-foreground: #ffffff;
+    --warning: #b45309;
+
+    --brand-panel: #0b132b;
+    --brand-panel-foreground: #f8fafc;
+    /* Brand green (#02945C) — 4.8:1 on brand-panel; too light for text on white. */
+    --brand-panel-accent: #02945c;
+
+    /* Capsule palette: every text color passes 4.5:1 on its -bg and on card. Green, yellow and red capsule text use primary, warning, destructive. */
+    --pill-green-bg: #e7f7f1;
+    --pill-green-border: #b9e8d4;
+    --pill-yellow-bg: #fff7e6;
+    --pill-yellow-border: #f9d89c;
+    --pill-red-bg: #fef2f2;
+    --pill-red-border: #fecaca;
+    --pill-blue-bg: #eff6ff;
+    --pill-blue-text: #2563eb;
+    --pill-blue-border: #bfdbfe;
+    --pill-purple-bg: #f5f3ff;
+    --pill-purple-text: #7c3aed;
+    --pill-purple-border: #ddd6fe;
+    --pill-orange-bg: #fff7ed;
+    --pill-orange-text: #c2410c;
+    --pill-orange-border: #fed7aa;
+    --pill-gray-bg: #f1f5f9;
+    --pill-gray-text: #52617a;
+    --pill-gray-border: #cbd5e1;
+
+    --archive-hover: #475569;
+    --view: #0e7490;
+
+    /* Chart and pipeline accents without a capsule equivalent. */
+    --chart-green: #16a34a;
+    --chart-amber: #f59e0b;
+    --chart-cyan: #06b6d4;
+    --chart-pink: #ec4899;
+
+    --shadow-card-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-card-md: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --shadow-cinematic: 0 32px 64px -16px color-mix(in srgb, var(--foreground) 18%, transparent);
+    --shadow-success: 0 8px 32px color-mix(in srgb, var(--primary) 15%, transparent);
+    --shadow-destructive: 0 8px 32px color-mix(in srgb, var(--destructive) 15%, transparent);
+    --shadow-purple: 0 8px 32px color-mix(in srgb, var(--pill-purple-text) 15%, transparent);
+
+    /* Modal / drawer scrim — always a dark shade (does not invert in dark mode). */
+    --overlay: rgba(15, 23, 42, 0.48);
+  }
+
+  /* Every text token keeps >= 4.5:1 on card and on its own capsule fill. */
+  .dark {
+    color-scheme: dark;
+
+    --background: #080d1c;
+    --foreground: #f8fafc;
+    --card: #0f172a;
+    --secondary: #1a2236;
+    --muted: #151d31;
+    --muted-foreground: #9aa4b8;
+    --border: #273046;
+
+    --primary: #20b67c;
+    --primary-hover: #34d399;
+    --primary-foreground: #06110c;
+    --destructive: #ef4444;
+    --destructive-hover: #f87171;
+    --destructive-foreground: #1a0606;
+    --warning: #fbbf24;
+
+    --pill-green-bg: #0b2a22;
+    --pill-green-border: #1d5a45;
+    --pill-yellow-bg: #2e2208;
+    --pill-yellow-border: #6b4a0f;
+    --pill-red-bg: #2d0f16;
+    --pill-red-border: #6e2228;
+    --pill-blue-bg: #0f2447;
+    --pill-blue-text: #60a5fa;
+    --pill-blue-border: #1e3f7a;
+    --pill-purple-bg: #221a45;
+    --pill-purple-text: #a78bfa;
+    --pill-purple-border: #3f2f7a;
+    --pill-orange-bg: #34190c;
+    --pill-orange-text: #fb923c;
+    --pill-orange-border: #6b3014;
+    --pill-gray-bg: #1e2638;
+    --pill-gray-text: #cbd5e1;
+    --pill-gray-border: #3a4558;
+
+    --archive-hover: #e2e8f0;
+    --view: #67e8f9;
+
+    --chart-green: #4ade80;
+    --chart-amber: #fcd34d;
+    --chart-cyan: #22d3ee;
+    --chart-pink: #f472b6;
+
+    --shadow-card-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-card-md: 0 4px 20px rgba(0, 0, 0, 0.5);
+    --shadow-cinematic: 0 32px 64px -16px rgba(0, 0, 0, 0.6);
+    --shadow-success: 0 8px 32px color-mix(in srgb, var(--primary) 25%, transparent);
+    --shadow-destructive: 0 8px 32px color-mix(in srgb, var(--destructive) 25%, transparent);
+    --shadow-purple: 0 8px 32px color-mix(in srgb, var(--pill-purple-text) 25%, transparent);
+
+    --overlay: rgba(0, 0, 0, 0.62);
+  }
+}
