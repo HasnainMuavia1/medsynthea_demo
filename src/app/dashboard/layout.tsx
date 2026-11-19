@@ -36,7 +36,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       ? 'Register patient'
       : pathname.endsWith('/appointments/new')
         ? 'Schedule appointment'
-        : (navMatch?.label ?? 'Dashboard')
+        : pathname.startsWith('/dashboard/notifications')
+          ? 'Notifications'
+          : (navMatch?.label ?? 'Dashboard')
 
   useEffect(() => {
     if (hydrated && !authed) router.replace('/login')
