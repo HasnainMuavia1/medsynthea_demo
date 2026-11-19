@@ -190,9 +190,6 @@ export const DemoHeader = () => {
         <div className="hidden min-w-0 shrink items-center gap-2 text-sm text-muted-foreground md:flex">
           <Building2 className="size-4 shrink-0" aria-hidden />
           <span className="truncate font-medium text-foreground">{PRACTICE.shortName}</span>
-          <span className="shrink-0 whitespace-nowrap rounded-md border border-pill-yellow-border bg-pill-yellow-bg px-1.5 py-0.5 text-3xs font-semibold uppercase tracking-wide text-warning">
-            Demo data
-          </span>
         </div>
         <div className="flex min-w-0 flex-1 justify-center">
           <GlobalSearch />
