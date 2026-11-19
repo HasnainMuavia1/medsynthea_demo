@@ -24,7 +24,7 @@ const ToastCard = ({ id }: { id: string }) => {
   const { title, message, caseId, step } = toast
 
   return (
-    <div role="status" className="pointer-events-auto flex w-80 items-start gap-3 rounded-card border border-border bg-card p-3 shadow-card-md animate-in fade-in slide-in-from-bottom-2">
+    <div role="status" className="pointer-events-auto flex w-full items-start sm:w-80 gap-3 rounded-card border border-border bg-card p-3 shadow-card-md animate-in fade-in slide-in-from-bottom-2">
       <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-pill-green-border bg-pill-green-bg text-primary">
         <BellRing className="size-4" aria-hidden />
       </div>
@@ -60,7 +60,7 @@ export const DemoToaster = () => {
   if (pathname.startsWith('/dashboard/assistant')) return null
   const list = ids ? ids.split(',') : []
   return (
-    <div className="pointer-events-none fixed right-5 bottom-5 z-50 flex flex-col gap-2" aria-live="polite">
+    <div className="pointer-events-none fixed inset-x-3 top-15 z-50 flex flex-col gap-2 sm:inset-x-auto sm:right-5" aria-live="polite">
       {list.map((id) => (
         <ToastCard key={id} id={id} />
       ))}

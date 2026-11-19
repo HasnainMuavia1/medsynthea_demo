@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useEffect, type ComponentType } from 'react'
+import { Suspense, useEffect, useRef, type ComponentType } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, Check, FileX, Lock, Loader2, Play, Square } from 'lucide-react'
 import { RcmPage } from '@/components/ui/Rcm/RcmLayout'
@@ -51,9 +51,11 @@ const CaseWorkspace = () => {
   const patient = usePatient(c?.patientId ?? null)
 
   const requestedStep = params.get('step')
+  const activeStepRef = useRef<HTMLButtonElement>(null)
   const autopilot = useAutopilot(caseId, (step) => router.replace(caseHref(caseId, step), { scroll: false }))
   useEffect(() => {
     document.getElementById('main-content')?.scrollTo({ top: 0, behavior: 'smooth' })
+    activeStepRef.current?.scrollIntoView({ block: 'nearest', inline: 'center' })
   }, [requestedStep])
 
   const caseExists = Boolean(c)
@@ -87,14 +89,14 @@ const CaseWorkspace = () => {
         Appointments
       </Button>
 
-      <div className={cn(ui.surface.card, 'mt-2 mb-4 flex items-center gap-4 p-4')}>
+      <div className={cn(ui.surface.card, 'mt-2 mb-4 flex flex-wrap items-center gap-x-4 gap-y-3 p-4')}>
         <RcmAvatar name={fullName(patient)} className="size-11 text-sm" />
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
+        <div className="min-w-0 flex-1 basis-48">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <h1 className={cn(ui.typography.heroTitle, 'font-bold')}>{fullName(patient)}</h1>
             <StageBadge c={c} />
           </div>
-          <div className="mt-0.5 truncate text-xs text-muted-foreground">
+          <div className="mt-0.5 text-xs text-muted-foreground md:truncate">
             {patient.mrn} · {c.encounterNumber} · {visit.short} · {formatDate(`${c.appointment.date}T12:00:00`)} {c.appointment.time} · Dr. {provider.name} · {patient.insurance.payerName}
           </div>
         </div>
@@ -115,29 +117,30 @@ const CaseWorkspace = () => {
             Autopilot
           </Button>
         )}
-        <div className="w-44 shrink-0">
+        <div className="w-full shrink-0 sm:w-44">
           <div className={cn(ui.typography.eyebrow, 'mb-1')}>Revenue cycle progress</div>
           <StepProgress c={c} />
         </div>
       </div>
 
-      <div className="grid grid-cols-[var(--spacing-app-sidebar)_minmax(0,1fr)] items-start gap-4">
-        <nav aria-label="Revenue cycle steps" className={cn(ui.surface.card, 'sticky top-4 p-2')}>
-          <ol className="flex flex-col gap-px">
+      <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-[var(--spacing-app-sidebar)_minmax(0,1fr)]">
+        <nav aria-label="Revenue cycle steps" className={cn(ui.surface.card, 'min-w-0 p-2 xl:sticky xl:top-4')}>
+          <ol className="flex gap-1 overflow-x-auto no-scrollbar xl:flex-col xl:gap-px xl:overflow-visible">
             {STEPS.map((s, i) => {
               const done = isStepDone(c, s.id)
               const reachable = done || i <= currentIndex
               const isActive = s.id === active
               return (
-                <li key={s.id}>
+                <li key={s.id} className="shrink-0 xl:shrink">
                   <Button
+                    ref={isActive ? activeStepRef : undefined}
                     type="button"
                     variant="unstyled"
                     size="auto"
                     disabled={!reachable}
                     onClick={() => goTo(s.id)}
                     className={cn(
-                      'flex w-full items-center justify-start gap-2.5 rounded-md px-2 py-1.5 text-left whitespace-normal',
+                      'flex w-full items-center justify-start gap-2.5 rounded-md px-2 py-1.5 text-left whitespace-normal max-xl:w-44',
                       isActive ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground',
                       !reachable && 'opacity-60'
                     )}
@@ -161,7 +164,7 @@ const CaseWorkspace = () => {
             })}
           </ol>
         </nav>
-        <div className="min-w-0">
+        <div className="@container min-w-0">
           <Panel key={active} c={c} patient={patient} goTo={goTo} />
         </div>
       </div>

@@ -107,7 +107,7 @@ export const SubmissionStep = ({ c, patient, goTo }: StepPanelProps) => {
             </div>
           ) : null}
           <div className={ui.typography.sectionTitle}>Submission channel</div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 @xl:grid-cols-2">
             {[
               { id: 'edi' as const, icon: Send, title: 'EDI via clearinghouse', detail: `837P batch through ${PRACTICE.clearinghouse} · 999/277CA acknowledgments` },
               { id: 'portal' as const, icon: Globe, title: 'Payer web portal (bot)', detail: `Bot signs in to the ${payer.name} portal, keys the claim and attaches the note` },
@@ -184,7 +184,7 @@ export const StatusStep = ({ c, goTo }: StepPanelProps) => {
   const [checking, setChecking] = useState(false)
   const { claim, statusEvents, era } = c
   const paid = statusEvents.some((e) => e.code === 'paid')
-  const tracking = Boolean(claim?.liveTracking) && !c.eob && !isDenialOpen(c)
+  const tracking = Boolean(claim?.liveTracking) && !c.era && !c.eob && !isDenialOpen(c)
   const denialOpen = isDenialOpen(c)
 
   const checkNow = () => {
@@ -335,7 +335,7 @@ export const EraStep = ({ c, patient, goTo }: StepPanelProps) => {
       }
     >
       <DoneBanner title={`ERA received from ${payer.name}`} detail={`${era.paymentMethod} ${era.checkNumber} · ${money(era.totalPaid)} · received ${formatDateTime(era.receivedAt)}`} />
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-3 @3xl:grid-cols-4">
         {[
           { label: 'Billed', value: money(era.totalCharge) },
           { label: 'Insurance paid', value: money(era.totalPaid) },
@@ -434,7 +434,7 @@ export const EobStep = ({ c, patient, goTo }: StepPanelProps) => {
             <div>Issued {formatDate(eob.receivedAt)}</div>
           </div>
         </header>
-        <div className="grid grid-cols-3 gap-4 border-b border-border p-5 text-xs">
+        <div className="grid grid-cols-1 gap-4 border-b border-border p-5 text-xs @lg:grid-cols-3">
           <div>
             <div className={ui.typography.eyebrow}>Member</div>
             <div className="mt-1 font-semibold text-foreground">{fullName(patient)}</div>
@@ -470,7 +470,7 @@ export const EobStep = ({ c, patient, goTo }: StepPanelProps) => {
             ])}
             footer={['Total', money(era.totalCharge), money(era.contractualAdjustment), money(era.totalPaid), money(era.patientResponsibility)]}
           />
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 @md:grid-cols-2">
             <div className={cn('rounded-card border p-4', ui.tone.green)}>
               <div className="text-2xs font-semibold uppercase tracking-wide">Your plan paid</div>
               <div className="mt-1 text-2xl font-bold text-foreground">{money(era.totalPaid)}</div>
@@ -582,7 +582,7 @@ export const ReconciliationStep = ({ c, patient }: StepPanelProps) => {
       {r?.closedAt ? (
         <DoneBanner title="Account reconciled — all 15 steps complete" detail={`Closed ${formatDateTime(r.closedAt)} · balance $0.00 · deposit matched`} />
       ) : null}
-      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-4">
+      <div className="grid grid-cols-1 gap-4 @3xl:grid-cols-2">
         <div className="flex flex-col gap-2">
           {tasks.map((t) => {
             const Icon = t.icon
@@ -617,7 +617,7 @@ export const ReconciliationStep = ({ c, patient }: StepPanelProps) => {
           <MiniTable
             head={['Date', 'Transaction', 'Debit', 'Credit']}
             alignRight={[2, 3]}
-            rows={ledger.map((l) => [formatDate(l.date.length === 10 ? `${l.date}T12:00:00` : l.date), l.label, l.kind === 'charge' ? money(l.amount) : '', l.kind === 'credit' ? money(l.amount) : ''])}
+            rows={ledger.map((l) => [<span key="d" className="whitespace-nowrap">{formatDate(l.date.length === 10 ? `${l.date}T12:00:00` : l.date)}</span>, l.label, l.kind === 'charge' ? money(l.amount) : '', l.kind === 'credit' ? money(l.amount) : ''])}
             footer={['', 'Account balance', '', money(balance)]}
           />
           <div className={cn('rounded-card border p-4', balance === 0 ? ui.tone.green : ui.tone.yellow)}>

@@ -2,10 +2,11 @@
 
 import { Fragment, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { ChevronDown, PanelLeftClose, PanelLeftOpen, RotateCcw } from 'lucide-react'
+import { ChevronDown, PanelLeftClose, PanelLeftOpen, RotateCcw, X } from 'lucide-react'
 import { Button } from '@/components/shared/Button'
 import { LandingLogoLockup } from '@/components/ui/Landing/LandingLogo'
 import { useUIStore } from '@/store/uiStore'
+import { useIsDesktop } from '@/hooks/useMediaQuery'
 import { useDemoStore } from '@/demo/store'
 import { cn } from '@/utils'
 import { DEMO_NAV, isNavActive, workQueueCount } from './navigation'
@@ -23,8 +24,11 @@ const linkClass = (active: boolean, collapsed: boolean) =>
 
 export const DemoSidebar = () => {
   const pathname = usePathname()
-  const collapsed = useUIStore((s) => s.sidebarCollapsed)
+  const isDesktop = useIsDesktop()
+  const collapsed = useUIStore((s) => s.sidebarCollapsed) && isDesktop
   const toggle = useUIStore((s) => s.toggleSidebarCollapsed)
+  const mobileNavOpen = useUIStore((s) => s.mobileNavOpen)
+  const setMobileNavOpen = useUIStore((s) => s.setMobileNavOpen)
   const unread = useDemoStore((s) => s.notifications.filter((n) => !n.read).length)
   const resetDemo = useDemoStore((s) => s.resetDemo)
   const cases = useDemoStore((s) => s.cases)
@@ -32,10 +36,14 @@ export const DemoSidebar = () => {
 
   return (
     <aside
+      id="app-sidebar"
       className={cn(
-        'sticky top-0 flex h-screen w-full shrink-0 flex-col border-r border-border bg-secondary py-3',
+        'fixed inset-y-0 left-0 z-50 flex h-dvh w-64 max-w-[85vw] shrink-0 flex-col border-r border-border bg-secondary py-3 transition-transform duration-200',
+        'lg:sticky lg:top-0 lg:z-auto lg:w-full lg:max-w-none lg:translate-x-0 lg:transition-none',
+        mobileNavOpen ? 'translate-x-0 shadow-xl' : '-translate-x-full',
         collapsed ? 'px-1.5' : 'px-3'
       )}
+      inert={!isDesktop && !mobileNavOpen ? true : undefined}
     >
       <div
         className={cn(
@@ -51,10 +59,10 @@ export const DemoSidebar = () => {
           variant="unstyled"
           size="icon"
           className="size-8 shrink-0 text-muted-foreground hover:text-foreground"
-          onClick={toggle}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          onClick={isDesktop ? toggle : () => setMobileNavOpen(false)}
+          aria-label={!isDesktop ? 'Close menu' : collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          {collapsed ? <PanelLeftOpen className="size-4" aria-hidden /> : <PanelLeftClose className="size-4" aria-hidden />}
+          {!isDesktop ? <X className="size-4" aria-hidden /> : collapsed ? <PanelLeftOpen className="size-4" aria-hidden /> : <PanelLeftClose className="size-4" aria-hidden />}
         </Button>
       </div>
 

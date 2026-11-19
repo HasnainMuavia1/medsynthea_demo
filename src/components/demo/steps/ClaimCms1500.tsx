@@ -98,7 +98,7 @@ export const ClaimCms1500Step = ({ c, patient, goTo }: StepPanelProps) => {
                 Claim context loaded
               </Badge>
             </div>
-            <ul className="mt-3 grid grid-cols-3 gap-2">
+            <ul className="mt-3 grid grid-cols-1 gap-2 @2xl:grid-cols-3">
               {['Coverage active (271)', 'Coding complete', c.priorAuth?.authNumber ? `Prior auth ${c.priorAuth.authNumber}` : 'Prior auth not required'].map((r) => (
                 <li key={r} className="flex items-center gap-2 rounded-md border border-pill-green-border bg-pill-green-bg/50 px-3 py-2 text-xs text-foreground">
                   <CheckCircle2 className="size-3.5 shrink-0 text-primary" aria-hidden />
@@ -126,12 +126,12 @@ export const ClaimCms1500Step = ({ c, patient, goTo }: StepPanelProps) => {
             </div>
           </ClaimFormSection>
 
-          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3">
+          <div className="grid grid-cols-1 gap-3 @4xl:grid-cols-2">
             <ClaimFormSection icon={User} title="2–3. Patient Information">
               <div className={ui.layout.fieldGrid}>
                 <RoField id="pt-name" label="2. Patient name" value={`${patient.lastName}, ${patient.firstName}`} />
                 <RoField id="pt-dob" label="3. Birth date / sex" value={`${usDob(patient.dob)} · ${patient.sex === 'Male' ? 'M' : 'F'}`} />
-                <RoField id="pt-addr" label="5. Address" value={`${patient.address}, ${patient.city} ${patient.state} ${patient.zip}`} className="col-span-2" />
+                <RoField id="pt-addr" label="5. Address" value={`${patient.address}, ${patient.city} ${patient.state} ${patient.zip}`} className="sm:col-span-2" />
               </div>
             </ClaimFormSection>
             <ClaimFormSection icon={IdCard} title="4, 7. Insured Information">
@@ -144,7 +144,7 @@ export const ClaimCms1500Step = ({ c, patient, goTo }: StepPanelProps) => {
             </ClaimFormSection>
           </div>
 
-          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3">
+          <div className="grid grid-cols-1 gap-3 @4xl:grid-cols-2">
             <ClaimFormSection icon={CalendarDays} title="10, 14–16. Conditions & Dates">
               <div className={ui.layout.fieldGrid}>
                 <RoField id="cond-emp" label="10a. Employment related" value="No" />
@@ -162,7 +162,7 @@ export const ClaimCms1500Step = ({ c, patient, goTo }: StepPanelProps) => {
           </div>
 
           <ClaimFormSection icon={Stethoscope} title="21–23. Diagnosis">
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 gap-3 @md:grid-cols-2 @4xl:grid-cols-4">
               {coding.diagnoses.map((d, i) => (
                 <RoField key={d.code} id={`dx-${i}`} label={`${DX[i]}. ICD-10-CM`} value={`${d.code} — ${d.description}`} />
               ))}
@@ -188,7 +188,7 @@ export const ClaimCms1500Step = ({ c, patient, goTo }: StepPanelProps) => {
           </ClaimFormSection>
 
           <ClaimFormSection icon={CircleDollarSign} title="25–30. Financials & IDs">
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 gap-3 @md:grid-cols-2 @4xl:grid-cols-4">
               <RoField id="fin-tin" label="25. Federal tax ID (EIN)" value={PRACTICE.taxId} />
               <RoField id="fin-acct" label="26. Patient account #" value={c.encounterNumber} />
               <RoField id="fin-assign" label="27. Accept assignment" value="Yes" />
@@ -196,12 +196,12 @@ export const ClaimCms1500Step = ({ c, patient, goTo }: StepPanelProps) => {
             </div>
           </ClaimFormSection>
 
-          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3">
+          <div className="grid grid-cols-1 gap-3 @4xl:grid-cols-2">
             <ClaimFormSection icon={Building} title="33. Billing Provider">
               <div className={ui.layout.fieldGrid}>
                 <RoField id="bp-name" label="Name" value={PRACTICE.name} />
                 <RoField id="bp-npi" label="33a. NPI" value={PRACTICE.groupNpi} />
-                <RoField id="bp-addr" label="Address" value={PRACTICE.address} className="col-span-2" />
+                <RoField id="bp-addr" label="Address" value={PRACTICE.address} className="sm:col-span-2" />
               </div>
             </ClaimFormSection>
             <ClaimFormSection icon={Building} title="31–32. Physician & Service Facility">
@@ -296,7 +296,7 @@ export const ClaimCms1500Step = ({ c, patient, goTo }: StepPanelProps) => {
       {claim.checkedAt ? (
         <div className="rounded-card border border-pill-green-border bg-pill-green-bg/50 p-4">
           <p className="text-sm font-semibold text-primary">Claim check passed · 0 findings</p>
-          <ul className="mt-2 grid grid-cols-3 gap-2">
+          <ul className="mt-2 grid grid-cols-1 gap-2 @xl:grid-cols-2 @3xl:grid-cols-3">
             {CHECKS.map((ch) => (
               <li key={ch} className="flex items-center gap-2 text-xs text-foreground">
                 <CheckCircle2 className="size-3.5 shrink-0 text-primary" aria-hidden />

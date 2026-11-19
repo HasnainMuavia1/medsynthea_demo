@@ -13,15 +13,21 @@ import { useDemoStore } from '@/demo/store'
 import { useUIStore } from '@/store/uiStore'
 import { cn } from '@/utils'
 
-const SHELL_BASE = 'min-h-screen min-w-app-min bg-background text-foreground text-base leading-snug antialiased'
+const SHELL_BASE = 'min-h-dvh bg-background text-foreground text-base leading-snug antialiased'
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
   const hydrated = useHydrated()
   const authed = useDemoStore((s) => s.authed)
   const collapsed = useUIStore((s) => s.sidebarCollapsed)
+  const mobileNavOpen = useUIStore((s) => s.mobileNavOpen)
+  const setMobileNavOpen = useUIStore((s) => s.setMobileNavOpen)
   const pathname = usePathname()
   useClaimStatusSimulator()
+
+  useEffect(() => {
+    setMobileNavOpen(false)
+  }, [pathname, setMobileNavOpen])
 
   const navMatch = [...DEMO_NAV.flatMap((g) => g.items)].reverse().find((i) => isNavActive(i.href, pathname))
   const pageLabel = pathname.startsWith('/dashboard/cases/')
@@ -48,15 +54,18 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     <div
       className={cn(
         SHELL_BASE,
-        'grid',
+        'lg:grid',
         collapsed
-          ? 'grid-cols-[var(--spacing-app-sidebar-collapsed)_minmax(0,1fr)]'
-          : 'grid-cols-[var(--spacing-app-sidebar)_minmax(0,1fr)]'
+          ? 'lg:grid-cols-[var(--spacing-app-sidebar-collapsed)_minmax(0,1fr)]'
+          : 'lg:grid-cols-[var(--spacing-app-sidebar)_minmax(0,1fr)]'
       )}
     >
       <title>{`${pageLabel} | MedSynthea Demo`}</title>
+      {mobileNavOpen ? (
+        <div className="fixed inset-0 z-40 bg-foreground/40 lg:hidden" aria-hidden onClick={() => setMobileNavOpen(false)} />
+      ) : null}
       <DemoSidebar />
-      <div className="flex h-screen min-w-0 flex-col overflow-hidden">
+      <div className="flex h-dvh min-w-0 flex-col overflow-hidden">
         <DemoHeader />
         <main id="main-content" className="relative min-w-0 flex-1 overflow-x-hidden overflow-y-auto custom-scrollbar" tabIndex={-1}>
           {children}

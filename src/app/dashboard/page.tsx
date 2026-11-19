@@ -74,12 +74,12 @@ const RcmConsolePage = () => {
 
       <DashboardKpiGrid kpis={buildKpis(cases, period)} />
 
-      <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-3 mt-4">
+      <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <ClaimPipelineFunnel rows={funnel.rows} subtitle={funnel.subtitle} />
         <AgentRecommendations recs={buildRecommendations(cases, patients)} />
       </div>
 
-      <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-3 mt-4">
+      <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <AgentActivityFeed items={buildActivity(notifications)} />
         <AttentionList items={buildAttention(cases, patients)} />
       </div>

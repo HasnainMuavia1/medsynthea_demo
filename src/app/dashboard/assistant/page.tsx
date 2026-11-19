@@ -94,7 +94,7 @@ const AiAssistantPage = () => {
   const [activeId, setActiveId] = useState<string>('')
   const [draft, setDraft] = useState('')
   const [search, setSearch] = useState('')
-  const [historyOpen, setHistoryOpen] = useState(true)
+  const [historyOpen, setHistoryOpen] = useState(() => typeof window === 'undefined' || window.matchMedia('(min-width: 48rem)').matches)
   const endRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -189,11 +189,11 @@ const AiAssistantPage = () => {
 
   return (
     <RcmPage className="!pb-6">
-      <div className="grid grid-cols-[minmax(0,1fr)_var(--spacing-app-side-panel)] gap-4 items-start">
+      <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-[minmax(0,1fr)_var(--spacing-app-side-panel)]">
         <div className="relative flex h-ai-assistant-panel overflow-hidden rounded-card border border-border bg-card">
-          <div className={cn('shrink-0 overflow-hidden transition-[width] duration-[180ms] ease-linear', historyOpen ? 'w-chat-history' : 'w-0')} aria-hidden={!historyOpen}>
+          <div className={cn('shrink-0 overflow-hidden transition-[width] duration-[180ms] ease-linear max-md:absolute max-md:inset-y-0 max-md:left-0 max-md:z-10 max-md:shadow-lg', historyOpen ? 'w-chat-history' : 'w-0')} aria-hidden={!historyOpen}>
             {historyOpen ? (
-              <nav aria-label="Chat history" className="flex h-full w-chat-history shrink-0 flex-col border-r border-border bg-secondary/40 px-2.5 py-3">
+              <nav aria-label="Chat history" className="flex h-full w-chat-history shrink-0 flex-col border-r border-border bg-secondary/40 px-2.5 py-3 max-md:bg-secondary">
                 <div className="mb-2 flex items-center gap-1.5">
                   <Button type="button" variant="primary" size="sm" className="h-8 flex-1 gap-1 text-xs" onClick={startNewChat} aria-label="New chat">
                     <Plus className="size-3.5" aria-hidden />

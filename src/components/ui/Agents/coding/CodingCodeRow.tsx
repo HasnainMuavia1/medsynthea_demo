@@ -41,7 +41,7 @@ export const CodingCodeRow = ({ item, className }: { item: CodingCodeItem; class
           <Info className="size-3.5" aria-hidden />
         </Tooltip>
       ) : null}
-      {description ? <span className="min-w-0 text-muted-foreground">— {description}</span> : null}
+      {description ? <span className="min-w-0 basis-full text-muted-foreground">{description}</span> : null}
     </div>
   )
 }

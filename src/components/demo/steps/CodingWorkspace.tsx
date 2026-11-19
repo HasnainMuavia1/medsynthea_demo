@@ -14,7 +14,6 @@ import {
   LineChart,
   Loader2,
   Minus,
-  MoreHorizontal,
   Pencil,
   Plus,
   ShieldCheck,
@@ -90,11 +89,8 @@ const CodeColumn = ({ title, tone, codes }: { title: string; tone: 'green' | 'bl
     </div>
     <ul className="divide-y divide-border/70">
       {codes.map((item) => (
-        <li key={item.code} className="flex items-start justify-between gap-3 py-2.5 first:pt-0 last:pb-0">
+        <li key={item.code} className="py-2.5 first:pt-0 last:pb-0">
           <CodingCodeRow item={item} className="text-sm leading-snug" />
-          <Button type="button" variant="unstyled" size="icon" className="size-8 shrink-0 text-muted-foreground hover:text-foreground" aria-label={`Actions for code ${item.code}`} disabled>
-            <MoreHorizontal className="size-4" aria-hidden />
-          </Button>
         </li>
       ))}
     </ul>
@@ -245,7 +241,7 @@ export const CodingWorkspaceStep = ({ c, patient, goTo }: StepPanelProps) => {
             {pending === 'assign' ? (
               <ActionLoading view="assign" />
             ) : coding ? (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 @3xl:grid-cols-2">
                 <CodeColumn title="ICD-10-CM" tone="green" codes={icd} />
                 <CodeColumn title="CPT / HCPCS" tone="blue" codes={cpt} />
               </div>
@@ -285,7 +281,7 @@ export const CodingWorkspaceStep = ({ c, patient, goTo }: StepPanelProps) => {
             ) : ran.validate ? (
               <>
                 <ValidationBanner checks={insights.validationChecks.slice(0, 3)} />
-                <ul className="grid grid-cols-3 gap-2">
+                <ul className="grid grid-cols-1 gap-2 @md:grid-cols-2 @3xl:grid-cols-3">
                   {insights.validationChecks.map((check) => (
                     <li key={check} className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs text-foreground">
                       <CheckCircle2 className="size-3.5 shrink-0 text-primary" aria-hidden />
@@ -323,7 +319,7 @@ export const CodingWorkspaceStep = ({ c, patient, goTo }: StepPanelProps) => {
                     <span className="text-sm font-semibold text-foreground">{f.title}</span>
                     <span className="text-xs text-muted-foreground">{f.codes}</span>
                   </div>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 gap-3 @2xl:grid-cols-3">
                     <FindingColumn icon={FileText} title="Evidence" body={f.evidence} />
                     <FindingColumn icon={CircleHelp} title="Why this may cause a denial" body={f.why} />
                     <FindingColumn icon={Lightbulb} title="Recommended action" body={f.action} />
@@ -379,7 +375,7 @@ export const CodingWorkspaceStep = ({ c, patient, goTo }: StepPanelProps) => {
           pending === 'predict' ? (
             <ActionLoading view="predict" />
           ) : ran.predict ? (
-            <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4">
+            <div className="grid grid-cols-1 gap-4 @2xl:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
               <div className="flex flex-col items-center justify-center rounded-card border border-pill-green-border bg-pill-green-bg/50 p-5 text-center">
                 <p className="text-2xs font-semibold uppercase tracking-wide text-primary">Predicted denial</p>
                 <p className="mt-1 font-mono text-4xl font-semibold tabular-nums text-foreground">{insights.prediction.probability}%</p>

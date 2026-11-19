@@ -150,7 +150,7 @@ export const EstimateStep = ({ c, patient, goTo }: StepPanelProps) => {
       <AgentProgress run={run} agent="Estimate Agent" />
       {estimate ? (
         <Fragment>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 @2xl:grid-cols-3">
             <div className={cn('rounded-card border p-4', ui.tone.orange)}>
               <div className="text-2xs font-semibold uppercase tracking-wide">Patient responsibility</div>
               <div className="mt-1 text-3xl font-bold text-foreground">{money(estimate.patientResponsibility)}</div>
@@ -167,7 +167,7 @@ export const EstimateStep = ({ c, patient, goTo }: StepPanelProps) => {
               <div className="mt-1 text-xs text-foreground/80">Allowed {money(estimate.allowedAmount)} under contract</div>
             </div>
           </div>
-          <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-4">
+          <div className="grid grid-cols-1 gap-4 @3xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
             <MiniTable
               head={['Breakdown', 'Amount']}
               alignRight={[1]}
@@ -245,7 +245,7 @@ export const DenialStep = ({ c, goTo }: StepPanelProps) => {
       <AgentProgress run={run} agent="Denial Prevention Agent" />
       {denialCheck ? (
         <Fragment>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 @2xl:grid-cols-3">
             <div className={cn('rounded-card border p-4', ui.tone.green)}>
               <div className="text-2xs font-semibold uppercase tracking-wide">Denial predicted</div>
               <div className="mt-1 text-3xl font-bold text-foreground">No</div>
@@ -272,7 +272,7 @@ export const DenialStep = ({ c, goTo }: StepPanelProps) => {
               {expanded ? 'Hide' : 'Show'} check details
             </Button>
             {expanded ? (
-              <ul className="mt-2 grid grid-cols-2 gap-2">
+              <ul className="mt-2 grid grid-cols-1 gap-2 @xl:grid-cols-2">
                 {denialCheck.checks.map((check) => (
                   <li key={check.label} className="flex items-start gap-2 rounded-card border border-border bg-card p-3">
                     <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />

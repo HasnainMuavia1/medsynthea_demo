@@ -8,6 +8,7 @@ interface UIState {
     scope: AppLoadingScope
   }
   sidebarCollapsed: boolean
+  mobileNavOpen: boolean
   setLoading: (
     isLoading: boolean,
     label?: string,
@@ -16,6 +17,7 @@ interface UIState {
   ) => void
   setSidebarCollapsed: (collapsed: boolean) => void
   toggleSidebarCollapsed: () => void
+  setMobileNavOpen: (open: boolean) => void
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -24,6 +26,7 @@ export const useUIStore = create<UIState>((set) => ({
     scope: 'content',
   },
   sidebarCollapsed: false,
+  mobileNavOpen: false,
   setLoading: (isLoading, label, description, scope = 'content') =>
     set({
       loading: {
@@ -35,6 +38,7 @@ export const useUIStore = create<UIState>((set) => ({
     }),
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
   toggleSidebarCollapsed: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
+  setMobileNavOpen: (open) => set({ mobileNavOpen: open }),
 }))
 
 export type AppLoadingScope = 'content' | 'fullscreen'

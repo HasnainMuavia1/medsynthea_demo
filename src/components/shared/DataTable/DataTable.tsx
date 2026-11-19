@@ -95,7 +95,7 @@ export const DataTable = <T,>({
     >
       {panelHeader}
       <div className="@container max-w-full overflow-x-auto custom-scrollbar">
-        <table data-slot="data-table" className="w-full border-collapse text-sm">
+        <table data-slot="data-table" className="w-full min-w-3xl border-collapse text-sm">
           <thead>
             <tr>
               {resolvedColumns.map((column) => {

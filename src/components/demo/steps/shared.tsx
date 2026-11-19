@@ -98,7 +98,7 @@ export const MiniTable = ({
         {rows.map((row, r) => (
           <tr key={r} className="border-b border-border last:border-b-0">
             {row.map((cell, i) => (
-              <td key={i} className={cn('px-3 py-2 align-top text-foreground', alignRight.includes(i) && 'text-right tabular-nums')}>
+              <td key={i} className={cn('px-3 py-2 align-top text-foreground', alignRight.includes(i) && 'text-right tabular-nums whitespace-nowrap')}>
                 {cell}
               </td>
             ))}
@@ -109,7 +109,7 @@ export const MiniTable = ({
         <tfoot className="bg-secondary/30">
           <tr>
             {footer.map((cell, i) => (
-              <td key={i} className={cn('border-t border-border px-3 py-2 font-semibold text-foreground', alignRight.includes(i) && 'text-right tabular-nums')}>
+              <td key={i} className={cn('border-t border-border px-3 py-2 font-semibold text-foreground', alignRight.includes(i) && 'text-right tabular-nums whitespace-nowrap')}>
                 {cell}
               </td>
             ))}

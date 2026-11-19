@@ -14,13 +14,13 @@ const ICONS: Record<string, React.ReactNode> = {
 }
 
 export const AgentThroughputGrid = ({ items, doneLabel }: { items: Throughput[]; doneLabel: string }) => (
-  <div className="grid grid-cols-5 gap-3 mt-4">
+  <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
     {items.map((c) => (
       <Link key={c.id} href={c.href} className="rounded-card border border-border bg-card p-4 flex flex-col gap-2.5 hover:shadow-sm transition-colors">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 min-w-0">
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+          <div className="flex items-center gap-1.5">
             <span className="text-muted-foreground shrink-0">{ICONS[c.id]}</span>
-            <span className="text-sm font-medium truncate">{c.label}</span>
+            <span className="text-sm font-medium whitespace-nowrap">{c.label}</span>
           </div>
           {c.badge && <RcmBadge tone="red">{c.badge}</RcmBadge>}
         </div>
