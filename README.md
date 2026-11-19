@@ -25,7 +25,16 @@ Other modules:
 - **AI assistant** (`/dashboard/assistant`): answers questions from the live demo data. It tolerates typos and remembers "this patient". The question guide is `docs/MedSynthea-Demo-AI-Assistant-Questions.docx`.
 - The dashboard, AI assistant and notification center are ports of the real Frontend components (`RcmConsolePage`, `AiAssistant`, Notification Center), fed by demo data.
 
-Clinical notes, transcripts and codes come from the three provided notes (ER viral syndrome, ER chest pain, renal-exploration operative report). The visit type you pick when booking decides which one is used.
+The demo login is **Dr. Adam Advert** (Family Medicine). **Rizwan Khan** is seeded with an office visit today, eligibility already verified, ready for the recording.
+
+The recorded visit (`src/demo/rlqVisit.ts`) is used for everything a user brings in: every new appointment, every uploaded recording and every uploaded note. It always gives:
+
+- **Transcript:** the Deepgram transcript of the demo recording (`audio.mp3`, 9:42), in `src/demo/rlqVisitTranscript.ts`.
+- **Note:** the signed SOAP note for right lower quadrant abdominal pain, including its amendment.
+- **Codes:** R10.31, R68.81, R19.4, R68.2 (review) and CPT 99213 (review). "Upload clinical note" on the coding step reads these codes from an uploaded note.
+- **Price:** 99213 is billed at $95.19 (2026 Medicare national non-facility rate), place of service 11, copay only.
+
+The seeded sample visits keep their own notes (ER viral syndrome, ER chest pain, renal-exploration operative report).
 
 "Reset demo data" in the sidebar restores the sample patients.
 

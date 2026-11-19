@@ -31,6 +31,7 @@ export interface PayerProfile {
   coinsurancePct: number
   erCopay: number
   surgeryCopay: number
+  officeCopay: number
   phone: string
   portal: string
 }
@@ -51,6 +52,7 @@ export const PAYERS: PayerProfile[] = [
     coinsurancePct: 20,
     erCopay: 150,
     surgeryCopay: 0,
+    officeCopay: 30,
   },
   {
     id: 'bcbstx',
@@ -67,6 +69,7 @@ export const PAYERS: PayerProfile[] = [
     coinsurancePct: 20,
     erCopay: 250,
     surgeryCopay: 0,
+    officeCopay: 35,
   },
   {
     id: 'uhc',
@@ -83,6 +86,7 @@ export const PAYERS: PayerProfile[] = [
     coinsurancePct: 10,
     erCopay: 200,
     surgeryCopay: 0,
+    officeCopay: 30,
   },
   {
     id: 'cigna',
@@ -99,6 +103,7 @@ export const PAYERS: PayerProfile[] = [
     coinsurancePct: 30,
     erCopay: 300,
     surgeryCopay: 0,
+    officeCopay: 40,
   },
   {
     id: 'medicare',
@@ -115,12 +120,20 @@ export const PAYERS: PayerProfile[] = [
     coinsurancePct: 20,
     erCopay: 0,
     surgeryCopay: 0,
+    officeCopay: 0,
   },
 ]
 
 export const payerById = (id: string): PayerProfile => PAYERS.find((p) => p.id === id) ?? PAYERS[0]
 
 export const PROVIDERS: Provider[] = [
+  {
+    id: 'prv-4',
+    name: 'Adam Advert',
+    credentials: 'MD',
+    specialty: 'Family Medicine',
+    npi: '1467583920',
+  },
   {
     id: 'prv-1',
     name: 'Daniel Okafor',
@@ -160,8 +173,8 @@ export const PRACTICE = {
 export const DEMO_ACCOUNT = {
   email: 'medsynthea-demo@medsynthea.com',
   password: 'med@1122',
-  name: 'Demo Biller',
-  role: 'RCM Administrator',
+  name: 'Adam Advert',
+  role: 'Physician · Family Medicine',
 }
 
 export interface VisitTypeMeta {
@@ -175,6 +188,15 @@ export interface VisitTypeMeta {
 }
 
 export const VISIT_TYPES: VisitTypeMeta[] = [
+  {
+    id: 'clinic-rlq-pain',
+    label: 'Office visit — right lower quadrant abdominal pain',
+    short: 'Office visit · RLQ abdominal pain',
+    defaultProviderId: 'prv-4',
+    defaultReason: 'Right lower abdominal pain for about 1 week',
+    location: 'Primary Care Clinic — Exam 3',
+    durationSec: 582,
+  },
   {
     id: 'er-viral-syndrome',
     label: 'Emergency visit — fever, cough & body aches',

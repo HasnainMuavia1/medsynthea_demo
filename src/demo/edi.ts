@@ -1,3 +1,4 @@
+import { placeOfService } from './engine'
 import { PRACTICE, payerById, providerById } from './reference'
 import type { DemoCase, Patient } from './types'
 
@@ -18,7 +19,7 @@ export const build837P = (c: DemoCase, patient: Patient): string => {
     `NM1*IL*1*${patient.lastName.toUpperCase()}*${patient.firstName.toUpperCase()}****MI*${patient.insurance.memberId}~`,
     `DMG*D8*${patient.dob.replace(/-/g, '')}*${patient.sex === 'Male' ? 'M' : 'F'}~`,
     `NM1*PR*2*${payer.name.toUpperCase()}*****PI*${payer.payerIdCode}~`,
-    `CLM*${claim.claimId}*${claim.totalCharge}***${c.appointment.visitType === 'renal-exploration' ? '21' : '23'}:B:1*Y*A*Y*Y~`,
+    `CLM*${claim.claimId}*${claim.totalCharge}***${placeOfService(c)}:B:1*Y*A*Y*Y~`,
     ...(c.priorAuth?.authNumber ? [`REF*G1*${c.priorAuth.authNumber}~`] : []),
     `HI*${coding.diagnoses.map((d, i) => `${i === 0 ? 'ABK' : 'ABF'}:${d.code.replace('.', '')}`).join('*')}~`,
     `NM1*82*1*${(last ?? '').toUpperCase()}*${(first ?? '').toUpperCase()}****XX*${provider.npi}~`,

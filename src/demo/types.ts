@@ -17,7 +17,11 @@ export type StepId =
 
 export type Sex = 'Male' | 'Female'
 
-export type TemplateId = 'renal-exploration' | 'er-viral-syndrome' | 'er-chest-pain'
+export type TemplateId =
+  | 'clinic-rlq-pain'
+  | 'renal-exploration'
+  | 'er-viral-syndrome'
+  | 'er-chest-pain'
 
 export interface InsurancePlan {
   payerId: string
@@ -129,6 +133,8 @@ export interface DiagnosisLine {
 
 export interface Coding {
   codedAt: string
+  /** Set when the codes were read from an uploaded clinical note instead of the signed note. */
+  sourceNote?: { fileName: string; uploadedAt: string } | null
   procedures: ProcedureLine[]
   diagnoses: DiagnosisLine[]
   approvedAt: string | null

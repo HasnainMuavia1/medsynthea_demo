@@ -11,6 +11,7 @@ import {
   buildAudio,
   buildClaim,
   buildCoding,
+  buildCodingFromNote,
   buildDenialCheck,
   buildEligibility,
   buildEob,
@@ -64,6 +65,7 @@ interface DemoState {
   generateNote: (caseId: string) => void
   signNote: (caseId: string) => void
   runCoding: (caseId: string) => void
+  codeFromNote: (caseId: string, fileName: string) => void
   approveCoding: (caseId: string) => void
   setProcedureUnits: (caseId: string, index: number, units: number) => void
   removeProcedure: (caseId: string, index: number) => void
@@ -96,7 +98,7 @@ interface DemoState {
 
 const now = () => new Date().toISOString()
 
-const STORAGE_KEY = 'medsynthea-demo-state-v3'
+const STORAGE_KEY = 'medsynthea-demo-state-v4'
 
 const SERVER_STORAGE: Storage = {
   length: 0,
@@ -265,6 +267,12 @@ export const useDemoStore = create<DemoState>()(
 
         signNote: (caseId) =>
           patch(caseId, (c) => ({ note: c.note && { ...c.note, signedAt: now() } })),
+
+        codeFromNote: (caseId, fileName) => {
+          patch(caseId, () => ({ coding: buildCodingFromNote(fileName, now()) }))
+          const p = patientOf(caseOf(caseId))
+          notify('coding', 'Codes read from uploaded note', `Coding Agent coded ${fileName} for ${fullName(p)}.`, caseId, 'coding')
+        },
 
         runCoding: (caseId) => {
           patch(caseId, (c) => ({ coding: buildCoding(c, now()) }))

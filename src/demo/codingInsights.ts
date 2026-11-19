@@ -30,6 +30,52 @@ export interface CodingInsights {
 const VALIDATION = ['NCCI procedure-to-procedure (PTP) edits', 'Medically unlikely edits (MUE)', 'Modifier usage', 'ICD-10-CM / CPT linkage', 'Age and sex conflicts', 'Units vs. documented time']
 
 export const CODING_INSIGHTS: Record<TemplateId, CodingInsights> = {
+  'clinic-rlq-pain': {
+    validationChecks: VALIDATION,
+    findings: [
+      {
+        severity: 'LOW',
+        confidence: 0.16,
+        title: 'Symptom codes used without a definitive diagnosis',
+        codes: 'ICD-10-CM R10.31 • R68.81 • R19.4',
+        evidence: 'Assessment queries the etiology (constipation vs. other intra-abdominal pathology); no confirmed diagnosis was documented.',
+        why: 'When the cause is not established at the visit, coding guidelines call for the documented signs and symptoms.',
+        action: 'Keep R10.31 as primary with R68.81 and R19.4 as secondary — supported by the note.',
+      },
+      {
+        severity: 'MEDIUM',
+        confidence: 0.34,
+        title: 'Dry mouth code supported by exam only',
+        codes: 'ICD-10-CM R68.2',
+        evidence: 'Exam documents dry mucous membranes; the amendment states dehydration was not diagnosed.',
+        why: 'Dehydration (E86.0) would not be supported, so the finding is coded as documented.',
+        action: 'R68.2 flagged for coder review; E86.0 intentionally not assigned.',
+      },
+      {
+        severity: 'LOW',
+        confidence: 0.22,
+        title: 'E/M level supported by low MDM',
+        codes: 'CPT 99213',
+        evidence: 'One acute uncomplicated problem; CT deferred after a risk-benefit discussion; labs advised; follow-up in 1 week.',
+        why: 'Low medical decision making supports 99213 for an established patient office visit.',
+        action: 'Confirm the patient is established with the practice; otherwise bill 99203.',
+      },
+    ],
+    mitigations: [
+      { title: 'Linked every diagnosis to 99213', detail: 'Diagnosis pointers 1–4 cover the pain, early satiety, bowel change and dry mouth.' },
+      { title: 'Followed the amendment', detail: 'Dehydration removed from the plan heading, so E86.0 is not billed.' },
+      { title: 'Place of service 11 (office)', detail: 'Office visit billed on POS 11 with the office copay.' },
+    ],
+    prediction: {
+      probability: 4,
+      factors: [
+        { label: 'Eligibility active and verified', impact: 'lowers', weight: 30 },
+        { label: 'Single E/M line with all diagnoses linked', impact: 'lowers', weight: 25 },
+        { label: 'Established-patient status needs confirmation', impact: 'raises', weight: 6 },
+        { label: 'Payer history: clean office claims', impact: 'lowers', weight: 15 },
+      ],
+    },
+  },
   'er-viral-syndrome': {
     validationChecks: VALIDATION,
     findings: [

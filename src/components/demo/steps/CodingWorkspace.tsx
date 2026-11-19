@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import {
   Brain,
   CheckCircle2,
@@ -18,6 +18,7 @@ import {
   Plus,
   ShieldCheck,
   Trash2,
+  Upload,
   type LucideIcon,
 } from 'lucide-react'
 import { Button } from '@/components/shared/Button'
@@ -27,7 +28,14 @@ import { DocumentVisitPatientBanner } from '@/components/ui/Agents/DocumentVisit
 import { EncounterProgressIndicator } from '@/components/ui/Agents/EncounterProgressIndicator'
 import { CodingCodeRow, type CodingCodeItem } from '@/components/ui/Agents/coding/CodingCodeRow'
 import { CODING_INSIGHTS } from '@/demo/codingInsights'
-import { formatDate, formatDateTime, money, totalCharges } from '@/demo/engine'
+import {
+  RECORDED_VISIT,
+  clinicalTemplateId,
+  formatDate,
+  formatDateTime,
+  money,
+  totalCharges,
+} from '@/demo/engine'
 import { payerById, providerById, visitTypeById } from '@/demo/reference'
 import { useDemoStore } from '@/demo/store'
 import type { ProcedureLine } from '@/demo/types'
@@ -126,12 +134,14 @@ const FindingColumn = ({ icon: Icon, title, body }: { icon: LucideIcon; title: s
 
 export const CodingWorkspaceStep = ({ c, patient, goTo }: StepPanelProps) => {
   const runCoding = useDemoStore((s) => s.runCoding)
+  const codeFromNote = useDemoStore((s) => s.codeFromNote)
+  const noteInputRef = useRef<HTMLInputElement>(null)
   const approveCoding = useDemoStore((s) => s.approveCoding)
   const setProcedureUnits = useDemoStore((s) => s.setProcedureUnits)
   const removeProcedure = useDemoStore((s) => s.removeProcedure)
   const { coding, note, appointment } = c
   const completed = Boolean(coding?.approvedAt)
-  const insights = CODING_INSIGHTS[appointment.visitType]
+  const insights = CODING_INSIGHTS[coding?.sourceNote ? RECORDED_VISIT : clinicalTemplateId(c)]
   const [view, setView] = useState<CodingView>('assign')
   const [pending, setPending] = useState<CodingView | null>(null)
   const [ran, setRan] = useState<Record<CodingView, boolean>>({ assign: Boolean(coding), validate: completed, denial: completed, risk: completed, predict: completed })
@@ -147,6 +157,18 @@ export const CodingWorkspaceStep = ({ c, patient, goTo }: StepPanelProps) => {
       setRan((r) => ({ ...r, [next]: true }))
       setPending(null)
     }, RUN_MS[next])
+  }
+
+  /** Reads codes from an uploaded clinical note, with the same agent animation as Assign. */
+  const uploadNote = (file: File | null) => {
+    if (!file || pending) return
+    setView('assign')
+    setPending('assign')
+    window.setTimeout(() => {
+      codeFromNote(c.id, file.name)
+      setRan((r) => ({ ...r, assign: true }))
+      setPending(null)
+    }, RUN_MS.assign)
   }
 
   const selectView = (next: CodingView) => {
@@ -231,13 +253,39 @@ export const CodingWorkspaceStep = ({ c, patient, goTo }: StepPanelProps) => {
           <div className="flex flex-col gap-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h3 className="text-sm font-semibold text-foreground">Assign & Validate</h3>
-              {coding ? (
-                <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => setEditOpen(true)}>
-                  <Pencil className="size-3.5 shrink-0" aria-hidden />
-                  {completed ? 'View codes' : 'Edit codes'}
-                </Button>
-              ) : null}
+              <div className="flex flex-wrap items-center gap-2">
+                {!completed ? (
+                  <Fragment>
+                    <input
+                      ref={noteInputRef}
+                      type="file"
+                      accept=".pdf,.doc,.docx,.txt,application/pdf"
+                      className="sr-only"
+                      onChange={(e) => {
+                        uploadNote(e.target.files?.[0] ?? null)
+                        e.target.value = ''
+                      }}
+                    />
+                    <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => noteInputRef.current?.click()}>
+                      <Upload className="size-3.5 shrink-0" aria-hidden />
+                      Upload clinical note
+                    </Button>
+                  </Fragment>
+                ) : null}
+                {coding ? (
+                  <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => setEditOpen(true)}>
+                    <Pencil className="size-3.5 shrink-0" aria-hidden />
+                    {completed ? 'View codes' : 'Edit codes'}
+                  </Button>
+                ) : null}
+              </div>
             </div>
+            {coding?.sourceNote && pending !== 'assign' ? (
+              <p className="flex items-center gap-2 rounded-lg border border-pill-blue-border bg-pill-blue-bg px-3 py-2 text-xs text-pill-blue-text">
+                <FileText className="size-3.5 shrink-0" aria-hidden />
+                Codes read from uploaded note <span className="font-semibold">{coding.sourceNote.fileName}</span>
+              </p>
+            ) : null}
             {pending === 'assign' ? (
               <ActionLoading view="assign" />
             ) : coding ? (
@@ -246,7 +294,7 @@ export const CodingWorkspaceStep = ({ c, patient, goTo }: StepPanelProps) => {
                 <CodeColumn title="CPT / HCPCS" tone="blue" codes={cpt} />
               </div>
             ) : (
-              <Empty>Click Assign ICD & CPT / HCPCS to populate codes from the signed note.</Empty>
+              <Empty>Click Assign ICD & CPT / HCPCS to code the signed note, or upload a clinical note to code it.</Empty>
             )}
             {coding && pending !== 'assign' ? (
               <div className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-border bg-secondary/30 p-4">

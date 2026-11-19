@@ -50,6 +50,7 @@ const SEED_PATIENTS: SeedPatient[] = [
   { firstName: 'David', lastName: 'Kim', dob: '1980-09-09', sex: 'Male', payerId: 'aetna', city: 'Austin', street: '3300 Guadalupe St', zip: '78705', createdDaysAgo: 0 },
   { firstName: 'Kevin', lastName: 'Brooks', dob: '1969-02-11', sex: 'Male', payerId: 'uhc', city: 'Georgetown', street: '88 Williams Dr', zip: '78628', createdDaysAgo: 30 },
   { firstName: 'Sarah', lastName: 'Lin', dob: '1984-08-27', sex: 'Female', payerId: 'bcbstx', city: 'Austin', street: '5100 Airport Blvd', zip: '78751', createdDaysAgo: 26 },
+  { firstName: 'Rizwan', lastName: 'Khan', dob: '1990-04-12', sex: 'Male', payerId: 'bcbstx', city: 'Austin', street: '2601 S Lamar Blvd', zip: '78704', createdDaysAgo: 0 },
 ]
 
 const toPatient = (s: SeedPatient, i: number): Patient => {
@@ -206,7 +207,7 @@ export interface SeedState {
 
 export const buildSeed = (): SeedState => {
   const patients = SEED_PATIENTS.map(toPatient)
-  const [maria, james, aisha, robert, emily, , kevin, sarah] = patients
+  const [maria, james, aisha, robert, emily, , kevin, sarah, rizwan] = patients
 
   const c1 = advanceTo(emptyCase('case_seed1', maria, 'er-viral-syndrome', 10, '13:50'), maria, 'reconciliation', 10)
   const c2Base = advanceTo(emptyCase('case_seed2', james, 'er-chest-pain', 7, '18:10'), james, 'status', 7)
@@ -224,6 +225,8 @@ export const buildSeed = (): SeedState => {
   const c4Base = advanceTo(emptyCase('case_seed4', robert, 'renal-exploration', 2, '07:30'), robert, 'note', 2)
   const c4: DemoCase = { ...c4Base, coding: buildCoding(c4Base, isoAgo(1)) }
   const c5 = emptyCase('case_seed5', emily, 'er-chest-pain', 0, '16:40')
+  // Office visit with Dr. Adam Advert: eligibility verified, waiting for the visit recording.
+  const c8 = advanceTo(emptyCase('case_rizwan', rizwan, 'clinic-rlq-pain', 0, '11:30'), rizwan, 'eligibility', 0)
   const denied = (id: string, p: Patient, visit: TemplateId, daysAgo: number, time: string, code: 'CO-16' | 'CO-252'): DemoCase => {
     const base = advanceTo(emptyCase(id, p, visit, daysAgo, time), p, 'submission', daysAgo)
     return {
@@ -259,5 +262,5 @@ export const buildSeed = (): SeedState => {
     n('ntf_s6', 'denial', 'Claim denied (CO-16)', `${fullName(kevin)} · ${c6.claim?.claimId} — subscriber DOB mismatch. AR caller recommended.`, isoAgo(15), 'case_seed6', 'status', true),
     n('ntf_s7', 'denial', 'Claim denied (CO-252)', `${fullName(sarah)} · ${c7.claim?.claimId} — medical records requested. AR caller recommended.`, isoAgo(12), 'case_seed7', 'status', true)
   )
-  return { patients, cases: [c5, c4, c3, c2, c7, c6, c1], notifications }
+  return { patients, cases: [c8, c5, c4, c3, c2, c7, c6, c1], notifications }
 }

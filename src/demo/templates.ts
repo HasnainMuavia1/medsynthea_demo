@@ -7,6 +7,7 @@ import type {
   TemplateId,
   TranscriptLine,
 } from './types'
+import { RLQ_DIAGNOSES, RLQ_PROCEDURES, rlqSections, rlqTranscript } from './rlqVisit'
 
 export interface NoteContext {
   patient: Patient
@@ -635,7 +636,23 @@ const RENAL: ClinicalTemplate = {
   ],
 }
 
+const CLINIC_RLQ: ClinicalTemplate = {
+  title: 'Clinical note',
+  transcript: rlqTranscript,
+  sections: (ctx) =>
+    rlqSections({
+      patientName: `${ctx.patient.firstName} ${ctx.patient.lastName}`,
+      dob: ctx.patient.dob,
+      mrn: ctx.patient.mrn,
+      dateOfService: ctx.dateOfService,
+      physician: `${ctx.provider.name}, ${ctx.provider.credentials}`,
+    }),
+  procedures: RLQ_PROCEDURES,
+  diagnoses: RLQ_DIAGNOSES,
+}
+
 export const TEMPLATES: Record<TemplateId, ClinicalTemplate> = {
+  'clinic-rlq-pain': CLINIC_RLQ,
   'er-viral-syndrome': ER_VIRAL,
   'er-chest-pain': ER_CHEST,
   'renal-exploration': RENAL,

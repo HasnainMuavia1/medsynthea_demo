@@ -1,5 +1,5 @@
 import { jsPDF } from 'jspdf'
-import { CARC_LABELS, formatDate, fullName, money, usDob } from './engine'
+import { CARC_LABELS, formatDate, fullName, money, placeOfService, usDob } from './engine'
 import { PRACTICE, payerById, providerById } from './reference'
 import type { DemoCase, Patient } from './types'
 
@@ -392,7 +392,7 @@ export const downloadClaimPdf = (c: DemoCase, patient: Patient): void => {
     },
     highlights: [
       { label: '21. Diagnoses', value: coding.diagnoses.map((d) => d.code).join('  ') },
-      { label: 'Place of service', value: c.appointment.visitType === 'renal-exploration' ? '21' : '23' },
+      { label: 'Place of service', value: placeOfService(c) },
     ],
     notes: [`Date of service ${formatDate(`${c.appointment.date}T12:00:00`)}. Submitted electronically via ${PRACTICE.clearinghouse}${claim.submittedAt ? ` on ${formatDate(claim.submittedAt)}` : ''}.`],
   })

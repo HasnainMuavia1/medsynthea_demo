@@ -19,6 +19,7 @@ import type {
   Estimate,
   Patient,
   StepId,
+  TemplateId,
   TranscriptLine,
 } from './types'
 
@@ -102,6 +103,24 @@ const longDate = (iso: string): string =>
     day: 'numeric',
     year: 'numeric',
   })
+
+/** Visit used for every recording, note and code set a user brings into the demo. */
+export const RECORDED_VISIT: TemplateId = 'clinic-rlq-pain'
+
+/**
+ * Clinical content for a case. The seeded sample visits keep their own recordings; anything a
+ * user adds (a new appointment, an uploaded recording or note) uses the recorded office visit,
+ * so its transcript, note and codes always match the demo audio.
+ */
+export const clinicalTemplateId = (c: Pick<DemoCase, 'id' | 'appointment' | 'audio'>): TemplateId =>
+  c.id.startsWith('case_seed') && c.audio?.source !== 'upload' ? c.appointment.visitType : RECORDED_VISIT
+
+/** CMS place of service: 21 inpatient (surgery), 11 office, 23 emergency room. */
+export const placeOfService = (c: Pick<DemoCase, 'appointment'>): '11' | '21' | '23' => {
+  if (c.appointment.visitType === 'renal-exploration') return '21'
+  if (c.appointment.visitType === 'clinic-rlq-pain') return '11'
+  return '23'
+}
 
 export const paRequired = (c: Pick<DemoCase, 'appointment'>): boolean => c.appointment.visitType === 'renal-exploration'
 
@@ -190,7 +209,9 @@ export const buildAudio = (
   sizeKb: number | null,
   at: string
 ): AudioFile => {
-  const visit = visitTypeById(c.appointment.visitType)
+  const visit = visitTypeById(
+    fileName ? RECORDED_VISIT : clinicalTemplateId({ ...c, audio: null })
+  )
   return {
     fileName: fileName ?? `${c.encounterNumber.toLowerCase()}-ambient.m4a`,
     sizeKb: sizeKb ?? Math.round(visit.durationSec * 15.6),
@@ -208,10 +229,10 @@ const noteContext = (c: DemoCase, patient: Patient) => ({
 })
 
 export const buildTranscript = (c: DemoCase, patient: Patient): TranscriptLine[] =>
-  TEMPLATES[c.appointment.visitType].transcript(noteContext(c, patient))
+  TEMPLATES[clinicalTemplateId(c)].transcript(noteContext(c, patient))
 
 export const buildNote = (c: DemoCase, patient: Patient, at: string): ClinicalNote => {
-  const template = TEMPLATES[c.appointment.visitType]
+  const template = TEMPLATES[clinicalTemplateId(c)]
   return {
     title: template.title,
     generatedAt: at,
@@ -221,24 +242,43 @@ export const buildNote = (c: DemoCase, patient: Patient, at: string): ClinicalNo
 }
 
 export const buildCoding = (c: DemoCase, at: string): Coding => {
-  const template = TEMPLATES[c.appointment.visitType]
+  const template = TEMPLATES[clinicalTemplateId(c)]
   return {
     codedAt: at,
     procedures: template.procedures.map((p) => ({ ...p, modifiers: [...p.modifiers] })),
     diagnoses: template.diagnoses.map((d) => ({ ...d })),
     approvedAt: null,
+    sourceNote: null,
+  }
+}
+
+/** Codes read from an uploaded clinical note: always the recorded office visit's code set. */
+export const buildCodingFromNote = (fileName: string, at: string): Coding => {
+  const template = TEMPLATES[RECORDED_VISIT]
+  return {
+    codedAt: at,
+    procedures: template.procedures.map((p) => ({ ...p, modifiers: [...p.modifiers] })),
+    diagnoses: template.diagnoses.map((d) => ({ ...d })),
+    approvedAt: null,
+    sourceNote: { fileName, uploadedAt: at },
   }
 }
 
 export const buildEstimate = (c: DemoCase, patient: Patient, at: string): Estimate => {
   const payer = payerById(patient.insurance.payerId)
   const charges = c.coding ? totalCharges(c.coding) : 0
-  const allowed = round2(charges * payer.allowedRatio)
-  const isEr = c.appointment.visitType !== 'renal-exploration'
-  const copay = Math.min(isEr ? payer.erCopay : payer.surgeryCopay, allowed)
-  const deductibleRemaining = Math.max(0, payer.deductible - payer.deductibleMet)
+  const pos = placeOfService(c)
+  // Office visits are billed at the published fee-schedule rate, so it is also the allowed amount.
+  const allowed = pos === '11' ? charges : round2(charges * payer.allowedRatio)
+  const visitCopay = pos === '11' ? payer.officeCopay : pos === '21' ? payer.surgeryCopay : payer.erCopay
+  const copay = Math.min(visitCopay, allowed)
+  // Office visits are copay-only on these plans: no deductible or coinsurance.
+  const copayOnly = pos === '11'
+  const deductibleRemaining = copayOnly ? 0 : Math.max(0, payer.deductible - payer.deductibleMet)
   const deductibleApplied = round2(Math.min(deductibleRemaining, allowed - copay))
-  const coinsurance = round2((allowed - copay - deductibleApplied) * (payer.coinsurancePct / 100))
+  const coinsurance = copayOnly
+    ? 0
+    : round2((allowed - copay - deductibleApplied) * (payer.coinsurancePct / 100))
   let patientTotal = round2(copay + deductibleApplied + coinsurance)
   if (payer.oopMax > 0) patientTotal = Math.min(patientTotal, round2(payer.oopMax - payer.oopMet))
   const scale = copay + deductibleApplied + coinsurance > 0 ? patientTotal / (copay + deductibleApplied + coinsurance) : 0

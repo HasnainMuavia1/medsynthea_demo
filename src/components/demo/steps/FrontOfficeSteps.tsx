@@ -263,7 +263,7 @@ export const TranscriptionStep = ({ c, goTo }: StepPanelProps) => {
       <AgentProgress run={run} agent="Transcription Agent" />
       {transcript ? (
         <Fragment>
-          <DoneBanner title="Transcript ready" detail={`${transcript.length} utterances · ${words} words · 3 speakers · 97.8% confidence`} />
+          <DoneBanner title="Transcript ready" detail={`${transcript.length} utterances · ${words} words · ${new Set(transcript.map((t) => t.speaker)).size} speakers · 97.8% confidence`} />
           <div className="flex max-h-panel-scroll-lg flex-col gap-2 overflow-y-auto pr-1 custom-scrollbar">
             {transcript.map((line, i) => (
               <div key={i} className="flex gap-3 rounded-card border border-border bg-card p-3">
