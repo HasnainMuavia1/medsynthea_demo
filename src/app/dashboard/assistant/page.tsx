@@ -11,6 +11,12 @@ import { Button } from '@/components/shared/Button'
 import { Input } from '@/components/shared/Input/Input'
 import { Textarea } from '@/components/shared/Textarea'
 import { BrandMark } from '@/components/ui/Rcm/ai-assistant/BrandMark'
+import {
+  AssistantThinking,
+  AssistantThoughtSummary,
+  thinkingDurationMs,
+  thinkingSteps,
+} from '@/components/demo/AssistantThinking'
 import { answerQuestion, type AssistantAnswer } from '@/demo/assistant'
 import { currentStep, fullName, isCaseClosed, isDenialOpen, money, paRequired, usDob } from '@/demo/engine'
 import { stepMeta } from '@/demo/reference'
@@ -24,6 +30,10 @@ interface ChatMessage {
   answer: AssistantAnswer | null
   shown: number
   thinking: boolean
+  /** Thinking trace for assistant replies (absent on chats saved before it existed). */
+  steps?: string[]
+  thinkMs?: number
+  thinkStartedAt?: number
 }
 
 interface Chat {
@@ -35,9 +45,8 @@ interface Chat {
 }
 
 const STORAGE_KEY = 'medsynthea-demo-chats-v1'
-const CHARS_PER_TICK = 7
-const TICK_MS = 12
-const THINK_MS = 260
+const CHARS_PER_TICK = 3
+const TICK_MS = 16
 
 const QUICK_PROMPTS = [
   { id: 'claim-status', label: 'Claim status', prompt: 'How many claims do we have?', icon: ClipboardList },
@@ -138,15 +147,17 @@ const AiAssistantPage = () => {
     const { patients: ps, cases: cs } = useDemoStore.getState()
     const answer = answerQuestion(q, { patients: ps, cases: cs }, active.contextPatientId)
     const text = toMarkdown(answer)
+    const steps = thinkingSteps(answer, ps, cs.length)
+    const thinkMs = thinkingDurationMs(steps)
     setDraft('')
     updateActive((c) => ({
       ...c,
       title: c.title === 'New chat' ? q.slice(0, 48) : c.title,
       updatedAt: new Date().toISOString(),
       contextPatientId: answer.patientId ?? c.contextPatientId,
-      messages: [...c.messages, { role: 'user', text: q, answer: null, shown: q.length, thinking: false }, { role: 'ai', text, answer, shown: 0, thinking: true }],
+      messages: [...c.messages, { role: 'user', text: q, answer: null, shown: q.length, thinking: false }, { role: 'ai', text, answer, shown: 0, thinking: true, steps, thinkMs, thinkStartedAt: Date.now() }],
     }))
-    window.setTimeout(() => updateActive((c) => ({ ...c, messages: c.messages.map((m, i) => (i === c.messages.length - 1 ? { ...m, thinking: false } : m)) })), THINK_MS)
+    window.setTimeout(() => updateActive((c) => ({ ...c, messages: c.messages.map((m, i) => (i === c.messages.length - 1 ? { ...m, thinking: false } : m)) })), thinkMs)
   }
 
   const startNewChat = () => {
@@ -280,11 +291,16 @@ const AiAssistantPage = () => {
                       )}
                       <div className={`max-w-[92%] rounded-lg px-3 py-2.5 text-sm leading-relaxed ${m.role === 'user' ? 'rounded-br-sm bg-foreground text-background whitespace-pre-wrap' : AI_BUBBLE}`}>
                         {m.role === 'ai' && m.thinking ? (
-                          <span className="inline-flex items-center gap-2" role="status" aria-label="Assistant is thinking">
-                            <TypingDots />
-                          </span>
+                          m.steps?.length && m.thinkMs && m.thinkStartedAt ? (
+                            <AssistantThinking steps={m.steps} startedAt={m.thinkStartedAt} durationMs={m.thinkMs} />
+                          ) : (
+                            <span className="inline-flex items-center gap-2" role="status" aria-label="Assistant is thinking">
+                              <TypingDots />
+                            </span>
+                          )
                         ) : m.role === 'ai' ? (
                           <div data-testid="answer-text">
+                            {m.steps?.length && m.thinkMs ? <AssistantThoughtSummary steps={m.steps} durationMs={m.thinkMs} /> : null}
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>{done ? m.text : m.text.slice(0, m.shown)}</ReactMarkdown>
                           </div>
                         ) : (
