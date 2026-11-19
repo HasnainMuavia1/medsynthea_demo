@@ -29,7 +29,6 @@ export const DemoSidebar = () => {
   const toggle = useUIStore((s) => s.toggleSidebarCollapsed)
   const mobileNavOpen = useUIStore((s) => s.mobileNavOpen)
   const setMobileNavOpen = useUIStore((s) => s.setMobileNavOpen)
-  const unread = useDemoStore((s) => s.notifications.filter((n) => !n.read).length)
   const resetDemo = useDemoStore((s) => s.resetDemo)
   const cases = useDemoStore((s) => s.cases)
   const [closed, setClosed] = useState<Record<string, boolean>>({})
@@ -111,9 +110,7 @@ export const DemoSidebar = () => {
                     {collapsed ? null : (
                       <Fragment>
                         <span className="min-w-0 flex-1 truncate leading-snug">{item.label}</span>
-                        {item.id === 'notifications' && unread > 0 ? (
-                          <span className="font-mono text-2xs text-primary">{unread}</span>
-                        ) : workQueueCount(item.id, cases) > 0 ? (
+                        {workQueueCount(item.id, cases) > 0 ? (
                           <span className="font-mono text-2xs text-muted-foreground" title="Items waiting">
                             {workQueueCount(item.id, cases)}
                           </span>

@@ -1,7 +1,6 @@
 import {
   Activity,
   BadgeDollarSign,
-  Bell,
   Sparkles,
   FileLock2,
   PhoneCall,
@@ -39,7 +38,6 @@ export const DEMO_NAV: DemoNavGroup[] = [
       { id: 'overview', label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
       { id: 'patients', label: 'Patients', href: '/dashboard/patients', icon: Users },
       { id: 'assistant', label: 'AI Assistant', href: '/dashboard/assistant', icon: Sparkles },
-      { id: 'notifications', label: 'Notifications', href: '/dashboard/notifications', icon: Bell },
     ],
   },
   {
