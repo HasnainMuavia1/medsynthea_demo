@@ -168,7 +168,7 @@ const RegisterPatientPage = () => {
       />
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
         <SectionCard title="Demographics" icon={User}>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <FormField id="firstName" label="First name" required error={errors.firstName}>
               <Input id="firstName" value={draft.firstName} hasError={Boolean(errors.firstName)} onChange={(e) => set('firstName', e.target.value)} />
             </FormField>
@@ -192,7 +192,7 @@ const RegisterPatientPage = () => {
             <FormField id="email" label="Email">
               <Input id="email" type="email" value={draft.email} onChange={(e) => set('email', e.target.value)} />
             </FormField>
-            <FormField id="address" label="Street address" className="col-span-3">
+            <FormField id="address" label="Street address" className="sm:col-span-2 lg:col-span-3">
               <Input id="address" value={draft.address} onChange={(e) => set('address', e.target.value)} />
             </FormField>
             <FormField id="city" label="City">
@@ -208,7 +208,7 @@ const RegisterPatientPage = () => {
         </SectionCard>
 
         <SectionCard title="Insurance" subtitle="Primary coverage used for eligibility and claims." icon={ShieldCheck}>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <FormField id="payer" label="Payer" required>
               <Select id="payer" value={draft.payerId} options={PAYERS.map((p) => ({ value: p.id, label: p.name }))} onChange={(e) => set('payerId', e.target.value)} />
             </FormField>

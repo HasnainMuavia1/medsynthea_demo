@@ -137,7 +137,7 @@ const CallPage = () => {
         <ArrowLeft className="size-3.5" aria-hidden />
         AR worklist
       </Button>
-      <div className="mt-2 grid grid-cols-[minmax(0,17rem)_minmax(0,1fr)_minmax(0,17rem)] items-start gap-4">
+      <div className="mt-2 grid grid-cols-1 items-start gap-4 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] 2xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)_minmax(0,17rem)]">
         <div className="flex flex-col gap-3">
           <div className={cn(ui.surface.card, 'flex flex-col items-center gap-3 p-5 text-center')}>
             <div className={cn('relative flex size-20 items-center justify-center rounded-full border-2', phase === 'live' ? 'border-primary bg-primary/10' : 'border-border bg-secondary')}>
@@ -204,7 +204,7 @@ const CallPage = () => {
           </SectionCard>
         </div>
 
-        <section className={cn(ui.surface.card, 'flex min-h-160 flex-col')}>
+        <section className={cn(ui.surface.card, 'flex min-h-96 flex-col md:min-h-160')}>
           <div className={ui.surface.cardHeader}>
             <div className={ui.surface.iconBoxAccent}>
               <Bot className="size-4" aria-hidden />
@@ -257,7 +257,7 @@ const CallPage = () => {
           </div>
         </section>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 md:col-span-2 2xl:col-span-1">
           <SectionCard title="Live extraction" subtitle="Fields captured during the call" icon={CheckCircle2}>
             {extracted.length === 0 ? (
               <div className="text-xs text-muted-foreground">Waiting for call details…</div>

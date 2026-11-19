@@ -1,4 +1,4 @@
-import { currentStep, formatDate, formatDateTime, fullName, isCaseClosed, isDenialOpen, money, paRequired, round2, totalCharges } from './engine'
+import { completedCount, currentStep, formatDate, formatDateTime, fullName, isCaseClosed, isDenialOpen, money, paRequired, round2, totalCharges } from './engine'
 import { STEPS, stepMeta, visitTypeById } from './reference'
 import type { DemoCase, Patient, StepId } from './types'
 
@@ -337,7 +337,7 @@ const patientAnswer = (state: AssistantState, p: Patient, concepts: Set<Concept>
   return {
     ...base,
     intent: 'patient.status',
-    text: `${name} (${p.mrn}, ${p.insurance.payerName}) — ${visitTypeById(c.appointment.visitType).short} on ${c.appointment.date}. ${isCaseClosed(c) ? 'All 15 steps are complete and the account is reconciled.' : `Currently at step ${step.number} of 15: ${step.label}.`}${c.claim ? ` Claim ${c.claim.claimId} (${money(c.claim.totalCharge)}) is ${isDenialOpen(c) ? `denied ${c.denial?.code}` : c.era ? 'paid' : c.claim.submittedAt ? 'submitted' : 'created'}.` : ''}`,
+    text: `${name} (${p.mrn}, ${p.insurance.payerName}) — ${visitTypeById(c.appointment.visitType).short} on ${c.appointment.date}. ${isCaseClosed(c) ? 'All 15 steps are complete and the account is reconciled.' : `${completedCount(c)} of 15 steps complete; now on step ${step.number}, ${step.label}.`}${c.claim ? ` Claim ${c.claim.claimId} (${money(c.claim.totalCharge)}) is ${isDenialOpen(c) ? `denied ${c.denial?.code}` : c.era ? 'paid' : c.claim.submittedAt ? 'submitted' : 'created'}.` : ''}`,
     links: [caseLink(c, null, 'Open encounter')],
   }
 }

@@ -32,7 +32,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = Boolean(disabled || isLoading)
     const classes = cn(buttonVariants({ variant, size }), className)
     const content = isLoading ? (
-      <span className="inline-flex items-center justify-center gap-2">
+      <span className="inline-flex items-center justify-center gap-2 [&>svg:not(:first-child)]:hidden">
         <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
         {children}
       </span>

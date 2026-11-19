@@ -129,7 +129,7 @@ const NotificationsPage = () => {
 
   return (
     <RcmPage className="min-w-0">
-      <div className="flex flex-col gap-8 pb-10 max-w-5xl relative">
+      <div className="relative mx-auto flex max-w-5xl flex-col gap-8 pb-10">
         <div className="flex flex-row items-center justify-between gap-4 pb-6 border-b border-border/50">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground">Notification Center</h2>

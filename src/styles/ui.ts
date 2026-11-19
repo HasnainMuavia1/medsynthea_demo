@@ -23,7 +23,7 @@ export const ui = {
     page: 'flex flex-col gap-4',
     pageMin: 'flex min-h-0 flex-col gap-4',
     pagePad:
-      'animate-in fade-in slide-in-from-bottom-1 duration-200 px-page-pad py-5 pb-16 max-w-full min-w-0 md:px-6',
+      'animate-in fade-in slide-in-from-bottom-1 duration-200 px-page-pad py-5 pb-16 max-w-full min-w-0 max-sm:px-4 md:px-6',
     pageHeader: 'mb-4 flex flex-wrap items-center justify-between gap-3',
     section: 'space-y-section',
     sectionHeader: 'mb-section flex items-start justify-between gap-3',

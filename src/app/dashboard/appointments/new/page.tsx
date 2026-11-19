@@ -63,10 +63,10 @@ const NewAppointmentForm = () => {
         Appointments
       </Button>
       <RcmPageHeader title="Schedule appointment" subtitle="Step 2 — book the visit. Eligibility runs automatically next." />
-      <form onSubmit={handleSubmit} noValidate className="grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)] items-start gap-4">
+      <form onSubmit={handleSubmit} noValidate className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <SectionCard title="Visit details" icon={CalendarPlus}>
-          <div className="grid grid-cols-2 gap-3">
-            <FormField id="patient" label="Patient" required error={error} className="col-span-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <FormField id="patient" label="Patient" required error={error} className="sm:col-span-2">
               <Select
                 id="patient"
                 searchable
@@ -79,7 +79,7 @@ const NewAppointmentForm = () => {
                 }}
               />
             </FormField>
-            <FormField id="visitType" label="Visit type" required className="col-span-2" hint="Determines the clinical note template used later.">
+            <FormField id="visitType" label="Visit type" required className="sm:col-span-2" hint="Determines the clinical note template used later.">
               <Select
                 id="visitType"
                 value={draft.visitType}
@@ -108,7 +108,7 @@ const NewAppointmentForm = () => {
             <FormField id="time" label="Time" required>
               <Input id="time" type="time" value={draft.time} onChange={(e) => setDraft((d) => ({ ...d, time: e.target.value }))} />
             </FormField>
-            <FormField id="reason" label="Chief complaint / reason" className="col-span-2">
+            <FormField id="reason" label="Chief complaint / reason" className="sm:col-span-2">
               <Textarea id="reason" value={draft.reason} onChange={(e) => setDraft((d) => ({ ...d, reason: e.target.value }))} />
             </FormField>
           </div>

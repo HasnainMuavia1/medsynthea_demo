@@ -19,7 +19,7 @@ const KPI_ICONS = {
 export const DashboardKpiGrid = ({ kpis }: { kpis: Kpi[] }) => {
   const router = useRouter()
   return (
-    <div className="grid grid-cols-4 gap-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
       {kpis.map((k) => (
         <KpiCard
           key={k.id}

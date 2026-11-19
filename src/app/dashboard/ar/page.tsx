@@ -90,7 +90,7 @@ const ArPage = () => {
   return (
     <RcmPage>
       <RcmPageHeader title="AR follow-up · caller agent" subtitle="Unpaid and denied claims. The AI caller phones the payer, extracts the answer and takes the next action." />
-      <div className="mb-4 grid grid-cols-4 gap-4">
+      <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile label="Open AR" value={money(openAr)} hint={`${rows.length} claims awaiting payment`} icon={Wallet} />
         <StatTile label="Open denials" value={denied} hint="Need payer follow-up" icon={AlertTriangle} tone="red" />
         <StatTile label="Avg days outstanding" value={avgAge} icon={Clock} tone="yellow" />

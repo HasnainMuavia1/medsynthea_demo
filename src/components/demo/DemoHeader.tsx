@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Bell, Building2, Clock, LogOut, Mail, Moon, Sun, UserPlus } from 'lucide-react'
+import { Bell, Building2, Clock, LogOut, Mail, Menu, Moon, Sun, UserPlus } from 'lucide-react'
 import { Button } from '@/components/shared/Button'
 import { RcmAvatar } from '@/components/ui/Rcm/RcmPrimitives'
 import { usePopoverDismiss } from '@/hooks/usePopoverDismiss'
@@ -11,6 +11,7 @@ import { DEMO_ACCOUNT, PRACTICE } from '@/demo/reference'
 import { formatRelative } from '@/demo/engine'
 import { useDemoStore } from '@/demo/store'
 import { useTheme } from '@/components/shared/ThemeProvider/ThemeProvider'
+import { useUIStore } from '@/store/uiStore'
 import { cn } from '@/utils'
 import { GlobalSearch } from './GlobalSearch'
 import { caseHref } from './caseLinks'
@@ -46,7 +47,7 @@ const NotificationsMenu = () => {
         ) : null}
       </Button>
       {open ? (
-        <div role="menu" className="absolute right-0 top-menu-offset-y z-50 w-96 overflow-hidden rounded-xl border border-border bg-card shadow-lg">
+        <div role="menu" className="absolute -right-12 top-menu-offset-y z-50 w-[min(24rem,calc(100vw-1.5rem))] overflow-hidden sm:right-0 rounded-xl border border-border bg-card shadow-lg">
           <div className="flex items-center justify-between border-b border-border px-3.5 py-2.5">
             <span className="text-sm font-semibold text-foreground">Notifications</span>
             <Button type="button" variant="link" size="sm" className="text-xs" onClick={markAllRead}>
@@ -123,7 +124,7 @@ const AccountMenu = () => {
         aria-expanded={open}
         aria-haspopup="menu"
       >
-        <span className="truncate font-medium">{DEMO_ACCOUNT.name}</span>
+        <span className="hidden truncate font-medium sm:inline">{DEMO_ACCOUNT.name}</span>
         <RcmAvatar name={DEMO_ACCOUNT.name} className="size-7 text-3xs" />
       </Button>
       {open ? (
@@ -167,27 +168,44 @@ const AccountMenu = () => {
   )
 }
 
-export const DemoHeader = () => (
-  <header className="sticky top-0 z-20 shrink-0 border-b border-border bg-background/85 backdrop-blur-sm">
-    <div className="flex h-13 items-center gap-3 px-5">
-      <div className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
-        <Building2 className="size-4 shrink-0" aria-hidden />
-        <span className="truncate font-medium text-foreground">{PRACTICE.shortName}</span>
-        <span className="rounded-md border border-pill-yellow-border bg-pill-yellow-bg px-1.5 py-0.5 text-3xs font-semibold uppercase tracking-wide text-warning">
-          Demo data
-        </span>
+export const DemoHeader = () => {
+  const mobileNavOpen = useUIStore((s) => s.mobileNavOpen)
+  const setMobileNavOpen = useUIStore((s) => s.setMobileNavOpen)
+
+  return (
+    <header className="sticky top-0 z-20 shrink-0 border-b border-border bg-background/85 backdrop-blur-sm">
+      <div className="flex h-13 items-center gap-2 px-3 sm:gap-3 sm:px-5">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="!size-8 shrink-0 lg:hidden"
+          onClick={() => setMobileNavOpen(true)}
+          aria-label="Open menu"
+          aria-controls="app-sidebar"
+          aria-expanded={mobileNavOpen}
+        >
+          <Menu className="size-4" aria-hidden />
+        </Button>
+        <div className="hidden min-w-0 shrink items-center gap-2 text-sm text-muted-foreground md:flex">
+          <Building2 className="size-4 shrink-0" aria-hidden />
+          <span className="truncate font-medium text-foreground">{PRACTICE.shortName}</span>
+          <span className="shrink-0 whitespace-nowrap rounded-md border border-pill-yellow-border bg-pill-yellow-bg px-1.5 py-0.5 text-3xs font-semibold uppercase tracking-wide text-warning">
+            Demo data
+          </span>
+        </div>
+        <div className="flex min-w-0 flex-1 justify-center">
+          <GlobalSearch />
+        </div>
+        <Button href="/dashboard/patients/new" variant="primary" size="sm" className="shrink-0" aria-label="Register patient">
+          <UserPlus className="size-3.5" aria-hidden />
+          <span className="hidden sm:inline">Register patient</span>
+        </Button>
+        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
+          <NotificationsMenu />
+          <AccountMenu />
+        </div>
       </div>
-      <div className="flex flex-1 justify-center">
-        <GlobalSearch />
-      </div>
-      <Button href="/dashboard/patients/new" variant="primary" size="sm">
-        <UserPlus className="size-3.5" aria-hidden />
-        Register patient
-      </Button>
-      <div className="flex shrink-0 items-center gap-1.5">
-        <NotificationsMenu />
-        <AccountMenu />
-      </div>
-    </div>
-  </header>
-)
+    </header>
+  )
+}

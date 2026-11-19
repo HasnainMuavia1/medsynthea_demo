@@ -75,7 +75,7 @@ export const GlobalSearch = () => {
   }
 
   return (
-    <div ref={ref} className="relative w-80">
+    <div ref={ref} className="relative w-full max-w-80">
       <SearchField
         ref={inputRef}
         value={query}

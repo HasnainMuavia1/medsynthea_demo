@@ -31,6 +31,10 @@ const LoginPage = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError('')
+    if (!email.trim() || !password) {
+      setError('Enter your work email and password.')
+      return
+    }
     setPending(true)
     window.setTimeout(() => {
       if (login(email, password)) {

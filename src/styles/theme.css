@@ -80,7 +80,7 @@
   --spacing-state-panel: 40vh;
   --spacing-drawer-wide: min(840px, 96vw);
   --spacing-drawer-max: 96vw;
-  --spacing-ai-assistant-panel: calc(100vh - 120px);
+  --spacing-ai-assistant-panel: calc(100dvh - 120px);
   --spacing-menu-offset-y: calc(100% + 6px);
   --spacing-panel-scroll: min(28rem, 50vh);
   --spacing-panel-scroll-lg: min(28rem, 55vh);

@@ -74,12 +74,13 @@ export interface KeyValueItem {
 }
 
 export const KeyValueGrid = ({ items, columns = 3 }: { items: KeyValueItem[]; columns?: 2 | 3 | 4 }) => (
+  <div className="@container">
   <dl
     className={cn(
       'grid gap-x-6 gap-y-3',
-      columns === 2 && 'grid-cols-2',
-      columns === 3 && 'grid-cols-3',
-      columns === 4 && 'grid-cols-4'
+      columns === 2 && 'grid-cols-1 @sm:grid-cols-2',
+      columns === 3 && 'grid-cols-1 @sm:grid-cols-2 @2xl:grid-cols-3',
+      columns === 4 && 'grid-cols-1 @sm:grid-cols-2 @2xl:grid-cols-4'
     )}
   >
     {items.map(({ label, value }) => (
@@ -89,6 +90,7 @@ export const KeyValueGrid = ({ items, columns = 3 }: { items: KeyValueItem[]; co
       </div>
     ))}
   </dl>
+  </div>
 )
 
 export const ToneBadge = ({ tone, children }: { tone: BadgeTone; children: ReactNode }) => (

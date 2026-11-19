@@ -90,7 +90,7 @@ export const WebPortalSubmission = ({
   const fieldValue = (i: number) => (i < fieldIndex ? fields[i].value : i === fieldIndex && key === 'form' ? typed : '')
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,16rem)] gap-3">
+    <div className="grid grid-cols-1 gap-3 @3xl:grid-cols-[minmax(0,1fr)_minmax(0,16rem)]">
       <div className="overflow-hidden rounded-card border border-border bg-card shadow-card-sm">
         <div className="flex items-center gap-2 border-b border-border bg-secondary/60 px-3 py-2">
           <span className="flex gap-1" aria-hidden>
@@ -138,7 +138,7 @@ export const WebPortalSubmission = ({
           ) : (
             <div className="flex flex-col gap-3">
               <div className="text-sm font-semibold text-foreground">{formTitle}</div>
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-1 gap-2.5 @md:grid-cols-2">
                 {fields.map((f, i) => (
                   <label key={f.label} className="flex min-w-0 flex-col gap-1">
                     <span className={ui.typography.label}>{f.label}</span>

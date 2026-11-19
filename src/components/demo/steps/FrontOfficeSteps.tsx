@@ -128,7 +128,7 @@ export const EligibilityStep = ({ c, patient, goTo }: StepPanelProps) => {
             ]}
           />
           <PriorAuthPanel c={c} patient={patient} />
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 @xl:grid-cols-2">
             <Accumulator label="Individual deductible" met={eligibility.deductibleMet} total={eligibility.deductible} />
             <Accumulator label="Out-of-pocket maximum" met={eligibility.oopMet} total={eligibility.oopMax} />
           </div>

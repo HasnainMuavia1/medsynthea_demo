@@ -19,8 +19,8 @@ export const DocumentVisitPatientBanner = ({ patientName, mrn, appointment, depa
     { label: 'Insurance', value: insurance, hint: insuranceHint, icon: Shield },
   ]
   return (
-    <section className="rounded-card border border-border bg-card">
-      <div className={cn('grid min-w-0 items-center gap-4 p-4', 'grid-cols-[minmax(0,1.4fr)_repeat(4,minmax(0,1fr))]')}>
+    <section className="@container rounded-card border border-border bg-card">
+      <div className="grid min-w-0 grid-cols-1 items-start gap-4 p-4 @md:grid-cols-2 @4xl:grid-cols-[minmax(0,1.4fr)_repeat(4,minmax(0,1fr))] @4xl:items-center">
         <div className="flex min-w-0 items-center gap-3">
           <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-full border border-pill-green-border bg-pill-green-bg text-sm font-semibold text-primary" aria-hidden>
             {initialsFromName(patientName)}
@@ -29,15 +29,15 @@ export const DocumentVisitPatientBanner = ({ patientName, mrn, appointment, depa
             <p className="truncate text-sm font-semibold text-foreground" title={patientName}>
               {patientName}
             </p>
-            <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground" title={`MRN ${mrn}`}>
-              MRN {mrn}
+            <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground" title={mrn}>
+              {mrn}
             </p>
           </div>
         </div>
         {columns.map((column) => {
           const Icon = column.icon
           return (
-            <div key={column.label} className="flex min-w-0 items-start gap-2.5 border-l border-border pl-4">
+            <div key={column.label} className="flex min-w-0 items-start gap-2.5 @4xl:border-l @4xl:border-border @4xl:pl-4">
               <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-pill-blue-border bg-pill-blue-bg text-pill-blue-text" aria-hidden>
                 <Icon className="size-4" />
               </span>

@@ -273,7 +273,14 @@ export const buildDenialCheck = (c: DemoCase, patient: Patient, at: string): Den
         detail: hasMod25 ? 'Modifier 25 supported by separately identifiable E/M' : 'Modifiers consistent with documentation',
       },
       { label: 'Diagnosis-to-procedure linkage', detail: 'Every line points to a supporting ICD-10-CM code' },
-      { label: 'Prior authorization', detail: 'Not required for this service and payer' },
+      {
+        label: 'Prior authorization',
+        detail: paRequired(c)
+          ? c.priorAuth?.authNumber
+            ? `Approved · ${c.priorAuth.authNumber} on file for the billed procedure`
+            : 'Required for this service — authorization pending'
+          : 'Not required for this service and payer',
+      },
       { label: 'Duplicate claim check', detail: 'No prior claim for this patient, provider and date of service' },
       { label: 'Timely filing', detail: 'Within payer filing limit (well under 90 days)' },
       { label: 'Payer-specific rules', detail: `${payer.name} edit library — 0 hits` },

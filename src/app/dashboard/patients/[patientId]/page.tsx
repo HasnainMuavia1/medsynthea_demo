@@ -55,7 +55,7 @@ const PatientProfilePage = () => {
           </Button>
         }
       />
-      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <SectionCard title="Demographics" icon={User}>
           <KeyValueGrid
             columns={2}
