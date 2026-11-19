@@ -2,7 +2,7 @@
 
 import { Fragment, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { ChevronDown, PanelLeftClose, PanelLeftOpen, RotateCcw, X } from 'lucide-react'
+import { ChevronDown, PanelLeftClose, PanelLeftOpen, X } from 'lucide-react'
 import { Button } from '@/components/shared/Button'
 import { LandingLogoLockup } from '@/components/ui/Landing/LandingLogo'
 import { useUIStore } from '@/store/uiStore'
@@ -29,7 +29,6 @@ export const DemoSidebar = () => {
   const toggle = useUIStore((s) => s.toggleSidebarCollapsed)
   const mobileNavOpen = useUIStore((s) => s.mobileNavOpen)
   const setMobileNavOpen = useUIStore((s) => s.setMobileNavOpen)
-  const resetDemo = useDemoStore((s) => s.resetDemo)
   const cases = useDemoStore((s) => s.cases)
   const [closed, setClosed] = useState<Record<string, boolean>>({})
 
@@ -126,20 +125,6 @@ export const DemoSidebar = () => {
         ))}
       </nav>
 
-      <div className={cn('mt-2 border-t border-border pt-2.5', collapsed && 'flex justify-center')}>
-        <Button
-          type="button"
-          variant="unstyled"
-          size={collapsed ? 'icon' : 'auto'}
-          className={linkClass(false, collapsed)}
-          onClick={resetDemo}
-          aria-label={collapsed ? 'Reset demo data' : undefined}
-          title="Restore the original sample data"
-        >
-          <RotateCcw className="size-3.75 shrink-0" aria-hidden />
-          {collapsed ? null : <span className="min-w-0 flex-1 leading-snug">Reset demo data</span>}
-        </Button>
-      </div>
     </aside>
   )
 }

@@ -115,10 +115,17 @@ export const RECORDED_VISIT: TemplateId = 'clinic-rlq-pain'
 export const clinicalTemplateId = (c: Pick<DemoCase, 'id' | 'appointment' | 'audio'>): TemplateId =>
   c.id.startsWith('case_seed') && c.audio?.source !== 'upload' ? c.appointment.visitType : RECORDED_VISIT
 
-/** CMS place of service: 21 inpatient (surgery), 11 office, 23 emergency room. */
-export const placeOfService = (c: Pick<DemoCase, 'appointment'>): '11' | '21' | '23' => {
-  if (c.appointment.visitType === 'renal-exploration') return '21'
-  if (c.appointment.visitType === 'clinic-rlq-pain') return '11'
+/** Doctor on the recording; the recorded visit's note always names him. */
+export const RECORDED_VISIT_PROVIDER_ID = 'prv-4'
+
+/**
+ * CMS place of service, from the clinical content actually billed: 11 office (the recorded
+ * visit), 21 inpatient (surgery), 23 emergency room.
+ */
+export const placeOfService = (c: Pick<DemoCase, 'id' | 'appointment' | 'audio'>): '11' | '21' | '23' => {
+  const template = clinicalTemplateId(c)
+  if (template === 'renal-exploration') return '21'
+  if (template === RECORDED_VISIT) return '11'
   return '23'
 }
 
@@ -223,7 +230,9 @@ export const buildAudio = (
 
 const noteContext = (c: DemoCase, patient: Patient) => ({
   patient: { ...patient, dob: usDob(patient.dob) },
-  provider: providerById(c.appointment.providerId),
+  provider: providerById(
+    clinicalTemplateId(c) === RECORDED_VISIT ? RECORDED_VISIT_PROVIDER_ID : c.appointment.providerId
+  ),
   age: ageFrom(patient.dob, new Date(`${c.appointment.date}T12:00:00`)),
   dateOfService: longDate(c.appointment.date),
 })

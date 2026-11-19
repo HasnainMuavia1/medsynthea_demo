@@ -98,7 +98,7 @@ interface DemoState {
 
 const now = () => new Date().toISOString()
 
-const STORAGE_KEY = 'medsynthea-demo-state-v4'
+const STORAGE_KEY = 'medsynthea-demo-state-v5'
 
 const SERVER_STORAGE: Storage = {
   length: 0,

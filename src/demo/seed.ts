@@ -225,8 +225,8 @@ export const buildSeed = (): SeedState => {
   const c4Base = advanceTo(emptyCase('case_seed4', robert, 'renal-exploration', 2, '07:30'), robert, 'note', 2)
   const c4: DemoCase = { ...c4Base, coding: buildCoding(c4Base, isoAgo(1)) }
   const c5 = emptyCase('case_seed5', emily, 'er-chest-pain', 0, '16:40')
-  // Office visit with Dr. Adam Advert: eligibility verified, waiting for the visit recording.
-  const c8 = advanceTo(emptyCase('case_rizwan', rizwan, 'clinic-rlq-pain', 0, '11:30'), rizwan, 'eligibility', 0)
+  // Office visit with Dr. Tom Advert, booked and waiting at the first step (eligibility).
+  const c8 = emptyCase('case_rizwan', rizwan, 'clinic-rlq-pain', 0, '11:30')
   const denied = (id: string, p: Patient, visit: TemplateId, daysAgo: number, time: string, code: 'CO-16' | 'CO-252'): DemoCase => {
     const base = advanceTo(emptyCase(id, p, visit, daysAgo, time), p, 'submission', daysAgo)
     return {

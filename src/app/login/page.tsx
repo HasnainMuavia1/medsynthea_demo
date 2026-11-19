@@ -2,7 +2,6 @@
 
 import { Fragment, useEffect, useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
-import { Info } from 'lucide-react'
 import { AuthLayout } from '@/views/auth/shared/AuthLayout'
 import { authUi } from '@/views/auth/shared/auth-ui'
 import { Button } from '@/components/shared/Button'
@@ -10,9 +9,6 @@ import { Checkbox } from '@/components/shared/Checkbox'
 import { Input } from '@/components/shared/Input/Input'
 import { ArrowRight, EyeIcon, EyeOffIcon, LockIcon, MailIcon } from '@/components/ui/Landing/LandingIcons'
 import { useDemoStore } from '@/demo/store'
-import { DEMO_ACCOUNT } from '@/demo/reference'
-import { ui } from '@/styles/ui'
-import { cn } from '@/utils'
 
 const LoginPage = () => {
   const router = useRouter()
@@ -119,29 +115,6 @@ const LoginPage = () => {
         </Button>
       </form>
 
-      <div className={cn('rounded-lg border px-3 py-2.5 text-xs leading-relaxed', ui.tone.blue)}>
-        <div className="flex items-start gap-2">
-          <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />
-          <div className="min-w-0">
-            <div className="font-semibold">Demo account</div>
-            <div className="font-mono break-all">{DEMO_ACCOUNT.email}</div>
-            <div className="font-mono">{DEMO_ACCOUNT.password}</div>
-          </div>
-        </div>
-        <Button
-          type="button"
-          variant="link"
-          size="sm"
-          className="mt-1.5 text-xs"
-          onClick={() => {
-            setEmail(DEMO_ACCOUNT.email)
-            setPassword(DEMO_ACCOUNT.password)
-            setError('')
-          }}
-        >
-          Fill demo credentials
-        </Button>
-      </div>
     </AuthLayout>
   )
 }

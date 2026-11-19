@@ -129,7 +129,7 @@ export const payerById = (id: string): PayerProfile => PAYERS.find((p) => p.id =
 export const PROVIDERS: Provider[] = [
   {
     id: 'prv-4',
-    name: 'Adam Advert',
+    name: 'Tom Advert',
     credentials: 'MD',
     specialty: 'Family Medicine',
     npi: '1467583920',
@@ -173,7 +173,7 @@ export const PRACTICE = {
 export const DEMO_ACCOUNT = {
   email: 'medsynthea-demo@medsynthea.com',
   password: 'med@1122',
-  name: 'Adam Advert',
+  name: 'Tom Advert',
   role: 'Physician · Family Medicine',
 }
 

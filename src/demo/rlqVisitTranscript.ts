@@ -5,8 +5,8 @@ import type { TranscriptLine } from './types'
  * mis-heard words corrected. Timestamps are spread across the recording by turn length.
  */
 export const RLQ_VISIT_TRANSCRIPT: TranscriptLine[] = [
-  { speaker: 'Provider', at: '00:04', text: "Alright. Mister Khan, welcome back. Doctor Adam. Good to see you." },
-  { speaker: 'Patient', at: '00:13', text: "Doctor Adam, how are you?" },
+  { speaker: 'Provider', at: '00:04', text: "Alright. Mister Khan, welcome back. Doctor Tom. Good to see you." },
+  { speaker: 'Patient', at: '00:13', text: "Doctor Tom, how are you?" },
   { speaker: 'Provider', at: '00:18', text: "I'm good. I'm good. I hear you've got some concerning symptoms you made this appointment about?" },
   { speaker: 'Patient', at: '00:29', text: "Yeah. Basically, my feet, they've been burning. A burning sensation, as well as this kind of numbness and tingling." },
   { speaker: 'Provider', at: '00:41', text: "Mhmm." },
