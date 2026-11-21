@@ -9,7 +9,8 @@ import { Button } from '@/components/shared/Button'
 import { EmptyHint } from '@/components/demo/DemoUi'
 import { StageBadge, StepProgress } from '@/components/demo/StageBadge'
 import { caseHref } from '@/components/demo/caseLinks'
-import { useAutopilot } from '@/components/demo/useAutopilot'
+import { AutopilotProvider, useAutopilot } from '@/components/demo/useAutopilot'
+import { isAwaitingPayer } from '@/demo/autopilot'
 import { AppointmentStep, AudioStep, EligibilityStep, RegistrationStep, TranscriptionStep } from '@/components/demo/steps/FrontOfficeSteps'
 import { DenialStep, EstimateStep, NoteStep } from '@/components/demo/steps/ClinicalSteps'
 import { CodingWorkspaceStep } from '@/components/demo/steps/CodingWorkspace'
@@ -83,6 +84,7 @@ const CaseWorkspace = () => {
   const goTo = (step: StepId) => router.push(caseHref(c.id, step), { scroll: false })
 
   return (
+    <AutopilotProvider value={autopilot}>
     <RcmPage>
       <Button href="/dashboard/appointments" variant="link" size="sm" className={ui.interact.backLink}>
         <ArrowLeft className="size-3.5" aria-hidden />
@@ -102,7 +104,7 @@ const CaseWorkspace = () => {
         </div>
         {isCaseClosed(c) ? null : autopilot.running ? (
           <div className="flex shrink-0 items-center gap-2">
-            <span className="flex items-center gap-1.5 text-xs font-medium text-primary">
+            <span className="flex items-center gap-1.5 text-xs font-medium text-primary" role="status">
               <Loader2 className="size-3.5 animate-spin" aria-hidden />
               {autopilot.label}…
             </span>
@@ -111,12 +113,17 @@ const CaseWorkspace = () => {
               Stop
             </Button>
           </div>
-        ) : (
-          <Button type="button" variant="outline" size="sm" onClick={autopilot.start} title="Run every remaining step automatically">
+        ) : !c.claim?.submittedAt ? (
+          <Button type="button" variant="outline" size="sm" onClick={() => autopilot.start('workflow')} title="Run every step up to claim submission">
             <Play className="size-3.5" aria-hidden />
             Autopilot
           </Button>
-        )}
+        ) : isAwaitingPayer(c) ? (
+          <Button type="button" variant="outline" size="sm" onClick={() => autopilot.start('payer')} title="Simulate claim status, ERA and EOB">
+            <Play className="size-3.5" aria-hidden />
+            Demo autopilot
+          </Button>
+        ) : null}
         <div className="w-full shrink-0 sm:w-44">
           <div className={cn(ui.typography.eyebrow, 'mb-1')}>Revenue cycle progress</div>
           <StepProgress c={c} />
@@ -169,6 +176,7 @@ const CaseWorkspace = () => {
         </div>
       </div>
     </RcmPage>
+    </AutopilotProvider>
   )
 }
 

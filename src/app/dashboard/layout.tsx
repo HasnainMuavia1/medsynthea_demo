@@ -7,7 +7,6 @@ import { Loader } from '@/components/shared/Loader/Loader'
 import { DemoSidebar } from '@/components/demo/DemoSidebar'
 import { DemoHeader } from '@/components/demo/DemoHeader'
 import { DemoToaster } from '@/components/demo/DemoToaster'
-import { useClaimStatusSimulator } from '@/components/demo/useClaimStatusSimulator'
 import { useHydrated } from '@/components/demo/useHydrated'
 import { useDemoStore } from '@/demo/store'
 import { useUIStore } from '@/store/uiStore'
@@ -23,7 +22,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const mobileNavOpen = useUIStore((s) => s.mobileNavOpen)
   const setMobileNavOpen = useUIStore((s) => s.setMobileNavOpen)
   const pathname = usePathname()
-  useClaimStatusSimulator()
 
   useEffect(() => {
     setMobileNavOpen(false)

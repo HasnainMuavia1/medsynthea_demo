@@ -1,4 +1,4 @@
-import { paRequired } from './engine'
+import { STATUS_SEQUENCE, isDenialOpen, paRequired } from './engine'
 import { useDemoStore } from './store'
 import type { DemoCase, StepId } from './types'
 
@@ -8,35 +8,57 @@ export interface AutopilotAction {
   run: () => void
 }
 
-export const nextAutopilotAction = (caseId: string): AutopilotAction | null => {
+/**
+ * - `workflow`: every step the practice controls, ending with claim submission.
+ * - `payer`: the three steps that in real life wait on the clearinghouse and payer
+ *   (claim status, ERA, EOB). Run only on request, as a hypothetical walkthrough.
+ */
+export type AutopilotMode = 'workflow' | 'payer'
+
+/** Remaining payer steps this demo can simulate after submission. */
+export const PAYER_STEPS: StepId[] = ['status', 'era', 'eob']
+
+/** Claim is submitted and still waiting on the clearinghouse / payer (no EOB yet, no open denial). */
+export const isAwaitingPayer = (c: DemoCase): boolean => Boolean(c.claim?.submittedAt) && !c.eob && !isDenialOpen(c)
+
+const action = (step: StepId, label: string, run: () => void): AutopilotAction => ({ step, label, run })
+
+const workflowAction = (c: DemoCase): AutopilotAction | null => {
   const s = useDemoStore.getState()
-  const c: DemoCase | undefined = s.cases.find((x) => x.id === caseId)
-  if (!c) return null
-  const a = (step: StepId, label: string, run: () => void): AutopilotAction => ({ step, label, run })
-  if (!c.eligibility) return a('eligibility', 'Verifying eligibility', () => s.runEligibility(caseId))
-  if (paRequired(c) && !c.priorAuth) return a('eligibility', 'Submitting prior authorization', () => s.submitPriorAuth(caseId, 'portal'))
-  if (paRequired(c) && c.priorAuth?.status !== 'approved') return a('eligibility', 'Awaiting prior auth approval', () => s.approvePriorAuthFor(caseId))
-  if (!c.audio) return a('audio', 'Uploading encounter audio', () => s.uploadAudio(caseId, null, null))
-  if (!c.transcript) return a('transcription', 'Transcribing', () => s.transcribe(caseId))
-  if (!c.note) return a('note', 'Generating clinical note', () => s.generateNote(caseId))
-  if (!c.note.signedAt) return a('note', 'Signing note', () => s.signNote(caseId))
-  if (!c.coding) return a('coding', 'Coding encounter', () => s.runCoding(caseId))
-  if (!c.coding.approvedAt) return a('coding', 'Approving codes', () => s.approveCoding(caseId))
-  if (!c.estimate) return a('estimate', 'Calculating patient estimate', () => s.createEstimate(caseId))
-  if (!c.estimate.sharedWithPatient) return a('estimate', 'Sending estimate to patient', () => s.shareEstimate(caseId))
-  if (!c.denialCheck) return a('denial', 'Running denial prevention', () => s.runDenialCheck(caseId))
-  if (!c.claim) return a('claim', 'Creating claim draft', () => s.createClaim(caseId))
-  if (!c.claim.finalizedAt) return a('claim', 'Checking claim & marking ready', () => s.finalizeClaim(caseId))
-  if (!c.claim.submittedAt) return a('submission', 'Submitting claim', () => s.submitClaim(caseId, 'edi', null))
-  if (c.denial && !c.denial.resolvedAt) return null
-  if (c.statusEvents.length < 4) return a('status', 'Checking claim status', () => s.advanceStatus(caseId))
-  if (!c.era) return a('era', 'Receiving ERA', () => s.advanceStatus(caseId))
-  if (!c.era.reviewedAt) return a('era', 'Reviewing ERA', () => s.reviewEra(caseId))
-  if (!c.eob) return a('eob', 'Receiving EOB', () => s.advanceStatus(caseId))
-  if (!c.eob.viewedAt) return a('eob', 'Reviewing EOB', () => s.viewEob(caseId))
-  if (!c.reconciliation) return a('reconciliation', 'Posting insurance payment', () => s.postPayment(caseId))
-  if (!c.reconciliation.patientPaidAt) return a('reconciliation', 'Collecting patient payment', () => s.collectPatientPayment(caseId, 'Visa •••• 4242 (card on file)'))
-  if (!c.reconciliation.depositMatchedAt) return a('reconciliation', 'Matching bank deposit', () => s.matchDeposit(caseId))
-  if (!c.reconciliation.closedAt) return a('reconciliation', 'Closing account', () => s.closeAccount(caseId))
+  const id = c.id
+  if (!c.eligibility) return action('eligibility', 'Verifying eligibility', () => s.runEligibility(id))
+  if (paRequired(c) && !c.priorAuth) return action('eligibility', 'Submitting prior authorization', () => s.submitPriorAuth(id, 'portal'))
+  if (paRequired(c) && c.priorAuth?.status !== 'approved') return action('eligibility', 'Awaiting prior auth approval', () => s.approvePriorAuthFor(id))
+  if (!c.audio) return action('audio', 'Uploading encounter audio', () => s.uploadAudio(id, null, null))
+  if (!c.transcript) return action('transcription', 'Transcribing', () => s.transcribe(id))
+  if (!c.note) return action('note', 'Generating clinical note', () => s.generateNote(id))
+  if (!c.note.signedAt) return action('note', 'Signing note', () => s.signNote(id))
+  if (!c.coding) return action('coding', 'Coding encounter', () => s.runCoding(id))
+  if (!c.coding.approvedAt) return action('coding', 'Approving codes', () => s.approveCoding(id))
+  if (!c.estimate) return action('estimate', 'Calculating patient estimate', () => s.createEstimate(id))
+  if (!c.estimate.sharedWithPatient) return action('estimate', 'Sending estimate to patient', () => s.shareEstimate(id))
+  if (!c.denialCheck) return action('denial', 'Running denial prevention', () => s.runDenialCheck(id))
+  if (!c.claim) return action('claim', 'Creating claim draft', () => s.createClaim(id))
+  if (!c.claim.finalizedAt) return action('claim', 'Checking claim & marking ready', () => s.finalizeClaim(id))
+  if (!c.claim.submittedAt) return action('submission', 'Submitting claim', () => s.submitClaim(id, 'edi', null))
+  // Stop here: ERA / EOB only arrive after clearinghouse and payer confirmation.
   return null
+}
+
+const payerAction = (c: DemoCase): AutopilotAction | null => {
+  const s = useDemoStore.getState()
+  const id = c.id
+  if (!c.claim?.submittedAt || isDenialOpen(c)) return null
+  if (c.statusEvents.length < STATUS_SEQUENCE.length) return action('status', 'Receiving claim status', () => s.advanceStatus(id))
+  if (!c.era) return action('era', 'Receiving ERA (835)', () => s.advanceStatus(id))
+  if (!c.era.reviewedAt) return action('era', 'Reviewing ERA', () => s.reviewEra(id))
+  if (!c.eob) return action('eob', 'Receiving EOB', () => s.advanceStatus(id))
+  if (!c.eob.viewedAt) return action('eob', 'Reviewing EOB', () => s.viewEob(id))
+  return null
+}
+
+export const nextAutopilotAction = (caseId: string, mode: AutopilotMode): AutopilotAction | null => {
+  const c = useDemoStore.getState().cases.find((x) => x.id === caseId)
+  if (!c) return null
+  return mode === 'workflow' ? workflowAction(c) : payerAction(c)
 }

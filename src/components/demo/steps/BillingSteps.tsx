@@ -1,16 +1,18 @@
 'use client'
 
 import { Fragment, useState } from 'react'
-import { AlertTriangle, Banknote, CheckCircle2, Circle, CreditCard, Download, Globe, Landmark, Loader2, Lock, PhoneCall, RefreshCw, Send } from 'lucide-react'
+import { AlertTriangle, Banknote, CheckCircle2, Circle, Clock, CreditCard, Download, Globe, Landmark, Lock, PhoneCall, RefreshCw, Send } from 'lucide-react'
 import { Button } from '@/components/shared/Button'
 import { AgentProgress, DoneBanner, KeyValueGrid, useFakeRun } from '@/components/demo/DemoUi'
 import { CARC_LABELS, STATUS_SEQUENCE, isDenialOpen, formatDate, formatDateTime, fullName, money, round2, usDob } from '@/demo/engine'
 import { downloadEobPdf, downloadStatementPdf } from '@/demo/pdf'
 import { PRACTICE, payerById, providerById } from '@/demo/reference'
 import { useDemoStore } from '@/demo/store'
+import { isAwaitingPayer } from '@/demo/autopilot'
 import { ui } from '@/styles/ui'
 import { cn } from '@/utils'
 import { WebPortalSubmission } from '@/components/demo/WebPortalSubmission'
+import { PayerPendingNotice } from '@/components/demo/PayerPendingNotice'
 import { AppDialog, AppDialogActions } from '@/components/shared/Dialog/AppDialog'
 import { FormField } from '@/components/shared/FormField/FormField'
 import { Select } from '@/components/shared/Select'
@@ -55,8 +57,9 @@ export const SubmissionStep = ({ c, patient, goTo }: StepPanelProps) => {
         <Fragment>
           <DoneBanner
             title={`Claim submitted via ${claim.submissionMethod === 'portal' ? 'payer web portal' : 'EDI clearinghouse'}`}
-            detail={`${claim.claimId} transmitted ${formatDateTime(claim.submittedAt ?? '')} — status updates will arrive automatically.`}
+            detail={`${claim.claimId} transmitted ${formatDateTime(claim.submittedAt ?? '')}.`}
           />
+          <PayerPendingNotice c={c} />
           <KeyValueGrid
             columns={4}
             items={[
@@ -183,7 +186,6 @@ export const StatusStep = ({ c, goTo }: StepPanelProps) => {
   const [checking, setChecking] = useState(false)
   const { claim, statusEvents, era } = c
   const paid = statusEvents.some((e) => e.code === 'paid')
-  const tracking = Boolean(claim?.liveTracking) && !c.era && !c.eob && !isDenialOpen(c)
   const denialOpen = isDenialOpen(c)
 
   const checkNow = () => {
@@ -236,12 +238,7 @@ export const StatusStep = ({ c, goTo }: StepPanelProps) => {
           {c.arCalls[0].actionTaken ? <div className="mt-1 font-medium text-primary">Action: {c.arCalls[0].actionTaken}</div> : null}
         </div>
       ) : null}
-      {tracking ? (
-        <div className={cn('flex items-center gap-2 rounded-card border px-3 py-2 text-xs', ui.tone.blue)}>
-          <Loader2 className="size-3.5 animate-spin" aria-hidden />
-          Status Agent is tracking this claim — updates arrive as notifications.
-        </div>
-      ) : null}
+      <PayerPendingNotice c={c} />
       <KeyValueGrid
         columns={3}
         items={[
@@ -260,7 +257,7 @@ export const StatusStep = ({ c, goTo }: StepPanelProps) => {
                 {event ? (
                   <CheckCircle2 className="size-5 text-primary" aria-hidden />
                 ) : isNext ? (
-                  <Loader2 className="size-5 animate-spin text-muted-foreground" aria-hidden />
+                  <Clock className="size-5 text-muted-foreground" aria-hidden />
                 ) : (
                   <Circle className="size-5 text-border" aria-hidden />
                 )}
@@ -289,10 +286,13 @@ export const EraStep = ({ c, patient, goTo }: StepPanelProps) => {
   if (!era) {
     return (
       <PanelShell step="era">
-        <div className="flex items-center gap-2 rounded-card border border-border bg-secondary/30 p-4 text-sm text-muted-foreground">
-          <Loader2 className="size-4 animate-spin" aria-hidden />
-          Waiting for the payer&apos;s 835 remittance. It arrives automatically after the claim is paid.
-        </div>
+        {isAwaitingPayer(c) ? (
+          <PayerPendingNotice c={c} />
+        ) : (
+          <div className="rounded-card border border-border bg-secondary/30 p-4 text-sm text-muted-foreground">
+            The payer&apos;s 835 remittance is received after the claim is paid.
+          </div>
+        )}
       </PanelShell>
     )
   }
@@ -386,10 +386,13 @@ export const EobStep = ({ c, patient, goTo }: StepPanelProps) => {
   if (!eob || !era || !claim || !coding) {
     return (
       <PanelShell step="eob">
-        <div className="flex items-center gap-2 rounded-card border border-border bg-secondary/30 p-4 text-sm text-muted-foreground">
-          <Loader2 className="size-4 animate-spin" aria-hidden />
-          The EOB becomes available shortly after the ERA is received.
-        </div>
+        {isAwaitingPayer(c) ? (
+          <PayerPendingNotice c={c} />
+        ) : (
+          <div className="rounded-card border border-border bg-secondary/30 p-4 text-sm text-muted-foreground">
+            The EOB becomes available after the ERA is received.
+          </div>
+        )}
       </PanelShell>
     )
   }

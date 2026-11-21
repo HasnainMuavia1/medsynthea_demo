@@ -109,6 +109,12 @@ const SERVER_STORAGE: Storage = {
   setItem: () => {},
 }
 
+// Autopilot mutes pop-up toasts while it runs; notifications are still recorded in the bell.
+let toastsMuted = false
+export const setToastsMuted = (muted: boolean): void => {
+  toastsMuted = muted
+}
+
 export const useDemoStore = create<DemoState>()(
   persist(
     (set, get) => {
@@ -141,7 +147,7 @@ export const useDemoStore = create<DemoState>()(
         const item: DemoNotification = { id, kind, title, message, at: now(), read: false, caseId, step }
         set((s) => ({
           notifications: [item, ...s.notifications],
-          toasts: [...s.toasts, { id, title, message, caseId, step }].slice(-3),
+          toasts: toastsMuted ? s.toasts : [...s.toasts, { id, title, message, caseId, step }].slice(-3),
         }))
       }
 
